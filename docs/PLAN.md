@@ -12,6 +12,7 @@
 | Email | Resend |
 | Forms | React Hook Form + Zod |
 | State | Zustand (lightweight, POC-friendly) |
+| i18n | next-intl (Spanish default) |
 
 ---
 
@@ -69,26 +70,29 @@ Danger       #EF4444  — Red          (cancelled, errors)
 ```
 dental-poc/
 ├── app/
-│   ├── (auth)/
-│   │   └── login/
-│   │       └── page.tsx
-│   ├── (dashboard)/
-│   │   ├── layout.tsx              ← Sidebar + top nav shell
-│   │   ├── dashboard/
-│   │   │   └── page.tsx
-│   │   ├── patients/
-│   │   │   ├── page.tsx            ← Patient list
-│   │   │   ├── new/page.tsx        ← Create patient
-│   │   │   └── [id]/
-│   │   │       ├── page.tsx        ← Patient profile
-│   │   │       └── records/
-│   │   │           └── new/page.tsx
-│   │   ├── appointments/
-│   │   │   ├── page.tsx            ← Appointments list/calendar
-│   │   │   └── new/page.tsx        ← Book appointment
-│   │   └── admin/
-│   │       └── users/
-│   │           └── page.tsx        ← User management (admin only)
+│   ├── [locale]/
+│   │   ├── (auth)/
+│   │   │   └── login/
+│   │   │       └── page.tsx
+│   │   ├── (dashboard)/
+│   │   │   ├── layout.tsx              ← Sidebar + top nav shell
+│   │   │   ├── dashboard/
+│   │   │   │   └── page.tsx
+│   │   │   ├── patients/
+│   │   │   │   ├── page.tsx            ← Patient list
+│   │   │   │   ├── new/page.tsx        ← Create patient
+│   │   │   │   └── [id]/
+│   │   │   │       ├── page.tsx        ← Patient profile
+│   │   │   │       └── records/
+│   │   │   │           └── new/page.tsx
+│   │   │   ├── appointments/
+│   │   │   │   ├── page.tsx            ← Appointments list/calendar
+│   │   │   │   └── new/page.tsx        ← Book appointment
+│   │   │   └── admin/
+│   │   │       └── users/
+│   │   │           └── page.tsx        ← User management (admin only)
+│   │   └── layout.tsx                ← Root layout with locale support
+│   ├── page.tsx                     ← Locale redirect page
 │   └── api/
 │       └── reminders/
 │           └── route.ts
@@ -118,6 +122,11 @@ dental-poc/
 │   │   ├── patient.ts              ← Zod schemas
 │   │   └── appointment.ts
 │   └── utils.ts
+├── locales/
+│   ├── es/
+│   │   └── common.json             ← Spanish translations (default)
+│   └── en/
+│       └── common.json             ← English translations
 ├── hooks/
 │   ├── useUser.ts
 │   └── useRole.ts
@@ -165,6 +174,152 @@ dental-poc/
   ```
 - [ ] Apply theme variables to `globals.css`
 - [ ] Set up Inter font in `layout.tsx`
+
+### 0.2 i18n Setup (Spanish Default)
+- [ ] Install next-intl: `npm install next-intl`
+- [ ] Create `i18n.ts` configuration:
+  ```ts
+  import { getRequestConfig } from 'next-intl/server'
+  
+  export default getRequestConfig(async ({ locale }) => ({
+    messages: (await import(`./locales/${locale}/common.json`)).default
+  }))
+  ```
+- [ ] Create Spanish translation file `locales/es/common.json`:
+  ```json
+  {
+    "common": {
+      "save": "Guardar",
+      "cancel": "Cancelar",
+      "delete": "Eliminar",
+      "edit": "Editar",
+      "add": "Agregar",
+      "search": "Buscar",
+      "loading": "Cargando...",
+      "error": "Error",
+      "success": "Éxito"
+    },
+    "auth": {
+      "login": "Iniciar Sesión",
+      "logout": "Cerrar Sesión",
+      "email": "Correo Electrónico",
+      "password": "Contraseña",
+      "loginButton": "Ingresar"
+    },
+    "navigation": {
+      "dashboard": "Panel Principal",
+      "patients": "Pacientes",
+      "appointments": "Citas",
+      "users": "Usuarios"
+    }
+  }
+  ```
+- [ ] Create English translation file `locales/en/common.json`:
+  ```json
+  {
+    "common": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "edit": "Edit",
+      "add": "Add",
+      "search": "Search",
+      "loading": "Loading...",
+      "error": "Error",
+      "success": "Success"
+    },
+    "auth": {
+      "login": "Login",
+      "logout": "Logout",
+      "email": "Email",
+      "password": "Password",
+      "loginButton": "Sign In"
+    },
+    "navigation": {
+      "dashboard": "Dashboard",
+      "patients": "Patients",
+      "appointments": "Appointments",
+      "users": "Users"
+    }
+  }
+  ```
+- [ ] Update `next.config.ts` for i18n:
+  ```ts
+  import createNextIntlPlugin from 'next-intl/plugin'
+  
+  const withNextIntl = createNextIntlPlugin('./i18n.ts')
+  
+  /** @type {import('next').NextConfig} */
+  const nextConfig = {}
+  
+  export default withNextIntl(nextConfig)
+  ```
+- [ ] Create locale proxy structure in `app/`:
+  ```
+  app/
+  ├── [locale]/
+  │   ├── (auth)/
+  │   │   └── login/
+  │   │       └── page.tsx
+  │   ├── (dashboard)/
+  │   │   ├── layout.tsx
+  │   │   ├── dashboard/
+  │   │   │   └── page.tsx
+  │   │   ├── patients/
+  │   │   │   ├── page.tsx
+  │   │   │   ├── new/page.tsx
+  │   │   │   └── [id]/
+  │   │   │       ├── page.tsx
+  │   │   │       └── records/
+  │   │   │           └── new/page.tsx
+  │   │   ├── appointments/
+  │   │   │   ├── page.tsx
+  │   │   │   └── new/page.tsx
+  │   │   └── admin/
+  │   │       └── users/
+  │   │           └── page.tsx
+  │   └── layout.tsx
+  └── page.tsx
+  ```
+- [ ] Create locale redirect `app/page.tsx`:
+  ```ts
+  import { redirect } from 'next/navigation'
+  
+  export default function RootPage() {
+    redirect('/es')
+  }
+  ```
+- [ ] Update `[locale]/layout.tsx` to support locale parameter:
+  ```ts
+  import { NextIntlClientProvider } from 'next-intl'
+  import { getMessages } from 'next-intl/server'
+  import { notFound } from 'next/navigation'
+  
+  export default async function LocaleLayout({
+    children,
+    params: { locale }
+  }: {
+    children: React.ReactNode
+    params: { locale: string }
+  }) {
+    // Validate locale
+    if (!['es', 'en'].includes(locale)) {
+      notFound()
+    }
+    
+    const messages = await getMessages()
+    
+    return (
+      <html lang={locale}>
+        <body>
+          <NextIntlClientProvider messages={messages}>
+            {children}
+          </NextIntlClientProvider>
+        </body>
+      </html>
+    )
+  }
+  ```
 
 ---
 
@@ -643,6 +798,7 @@ export async function POST(request: Request) {
     "zustand": "^4",
     "resend": "^2",
     "date-fns": "^3",
+    "next-intl": "^3",
     "lucide-react": "^0.400",
     "class-variance-authority": "^0.7",
     "clsx": "^2",
