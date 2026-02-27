@@ -1,0 +1,12 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.prettier": "always",
+    "source.removeUnusedImports": "always",
+    "source.organizeLinkDefinitions": "always",
+    "source.addMissingImports.ts": "always",
+    "source.organizeImports": "always"
+  }
+}
