@@ -6,17 +6,21 @@ description: When starting a new issue, you must create a new model decision to 
 # GitHub Issue Workflow Rules
 
 ## Branch Naming Convention
+
 For each issue you work on, you must create a new branch following this pattern:
+
 ```
 <type>/<user>/<issue>-<scope>
 ```
 
 ### Examples:
+
 - `feature/mario/1-project-set-up`
 - `bugfix/mario/42-login-validation`
 - `hotfix/mario/99-critical-security-patch`
 
 ### Branch Types:
+
 - `feature` - New functionality
 - `bugfix` - Bug fixes
 - `hotfix` - Critical fixes that need immediate deployment
@@ -26,10 +30,22 @@ For each issue you work on, you must create a new branch following this pattern:
 
 ## Issue-Based Development Process
 
+0. **Pre-Action Confirmation**
+   - **Before creating or editing any GitHub resources (issues, PRs, branches)**
+   - **Always ask for user confirmation first**
+   - **Show a detailed preview of intended actions including:**
+     - What will be created/edited
+     - All parameters and configurations
+     - Expected outcomes
+     - Any side effects
+     - **GitHub URLs for reference** (issue links, branch links, etc.)
+   - **Wait for explicit user approval before proceeding**
+
 1. **Before Starting Work**
    - Create a new branch using the naming convention above
    - **Agent must run git commands to create the branch and move to it**
    - Reference the issue number in the branch name
+   - **Assign the issue to the user working on it**
    - Ensure the issue is assigned to you
 
 2. **During Development**
@@ -49,14 +65,16 @@ For each issue you work on, you must create a new branch following this pattern:
    - Request review from appropriate team members
 
 ## Issue States
+
 - **Open**: Ready to be assigned
 - **In Progress**: Branch created and work started
 - **Review Ready**: Pull request created AND pushed
 - **Done**: Pull request merged and moved to main branch
 
 ## Post-Completion Steps
+
 After completing an issue:
+
 - Ensure the pull request is merged
 - **Move back to the main branch**
 - Clean up local feature branch if needed
-
