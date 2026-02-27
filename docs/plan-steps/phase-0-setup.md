@@ -1,11 +1,13 @@
 # 🗄️ Phase 0 — Project Setup
 
 ## Overview
+
 Initial project scaffolding, dependency installation, and development environment configuration.
 
 ## Steps
 
 ### 0.1 Basic Setup
+
 - [ ] `npx create-next-app@latest dental-poc --typescript --tailwind --app`
 - [ ] Install and init shadcn/ui: `npx shadcn@latest init`
 - [ ] Install dependencies:
@@ -36,15 +38,18 @@ Initial project scaffolding, dependency installation, and development environmen
 - [ ] Set up Inter font in `layout.tsx`
 
 ### 0.2 i18n Setup (Spanish Default)
+
 - [ ] Install next-intl: `npm install next-intl`
 - [ ] Create `i18n.ts` configuration:
+
   ```ts
-  import { getRequestConfig } from "next-intl/server";
+  import { getRequestConfig } from 'next-intl/server';
 
   export default getRequestConfig(async ({ locale }) => ({
     messages: (await import(`./locales/${locale}/common.json`)).default,
   }));
   ```
+
 - [ ] Create Spanish translation file `locales/es/common.json`:
   ```json
   {
@@ -104,16 +109,18 @@ Initial project scaffolding, dependency installation, and development environmen
   }
   ```
 - [ ] Update `next.config.ts` for i18n:
-  ```ts
-  import createNextIntlPlugin from "next-intl/plugin";
 
-  const withNextIntl = createNextIntlPlugin("./i18n.ts");
+  ```ts
+  import createNextIntlPlugin from 'next-intl/plugin';
+
+  const withNextIntl = createNextIntlPlugin('./i18n.ts');
 
   /** @type {import('next').NextConfig} */
   const nextConfig = {};
 
   export default withNextIntl(nextConfig);
   ```
+
 - [ ] Create locale proxy structure in `app/`:
   ```
   app/
@@ -142,14 +149,17 @@ Initial project scaffolding, dependency installation, and development environmen
   └── page.tsx
   ```
 - [ ] Create locale redirect `app/page.tsx`:
+
   ```ts
-  import { redirect } from "next/navigation";
+  import { redirect } from 'next/navigation';
 
   export default function RootPage() {
-    redirect("/es");
+    redirect('/es');
   }
   ```
+
 - [ ] Update `[locale]/layout.tsx` to support locale parameter:
+
   ```ts
   import { NextIntlClientProvider } from 'next-intl'
   import { getMessages } from 'next-intl/server'
@@ -182,14 +192,16 @@ Initial project scaffolding, dependency installation, and development environmen
   ```
 
 ### 0.3 Testing Setup
+
 - [ ] Install Vitest and related dependencies:
   ```bash
   npm install -D vitest @testing-library/react @testing-library/jest-dom jsdom @vitest/ui
   ```
 - [ ] Create `vitest.config.ts`:
+
   ```ts
-  import { defineConfig } from 'vitest/config'
-  import { resolve } from 'path'
+  import { defineConfig } from 'vitest/config';
+  import { resolve } from 'path';
 
   export default defineConfig({
     test: {
@@ -202,11 +214,12 @@ Initial project scaffolding, dependency installation, and development environmen
         '@': resolve(__dirname, './'),
       },
     },
-  })
+  });
   ```
+
 - [ ] Create test setup file `test/setup.ts`:
   ```ts
-  import '@testing-library/jest-dom'
+  import '@testing-library/jest-dom';
   ```
 - [ ] Add test scripts to `package.json`:
   ```json
@@ -219,19 +232,21 @@ Initial project scaffolding, dependency installation, and development environmen
   }
   ```
 - [ ] Create example test `__tests__/example.test.tsx`:
+
   ```tsx
-  import { render, screen } from '@testing-library/react'
-  import { describe, it, expect } from 'vitest'
+  import { render, screen } from '@testing-library/react';
+  import { describe, it, expect } from 'vitest';
 
   describe('Example Test', () => {
     it('should render', () => {
-      render(<div>Hello World</div>)
-      expect(screen.getByText('Hello World')).toBeInTheDocument()
-    })
-  })
+      render(<div>Hello World</div>);
+      expect(screen.getByText('Hello World')).toBeInTheDocument();
+    });
+  });
   ```
 
 ### 0.4 Development Environment
+
 - [ ] Configure ESLint for Next.js + TypeScript:
   ```json
   {
@@ -256,11 +271,19 @@ Initial project scaffolding, dependency installation, and development environmen
   {
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "typescript.preferences.importModuleSpecifier": "relative"
+    "typescript.preferences.importModuleSpecifier": "relative",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.prettier": "always",
+      "source.removeUnusedImports": "always",
+      "source.organizeLinkDefinitions": "always",
+      "source.addMissingImports.ts": "always",
+      "source.organizeImports": "always"
+    }
   }
   ```
 
 ## Deliverables
+
 - Fully configured Next.js project with TypeScript and Tailwind
 - Internationalization setup with Spanish as default
 - Testing framework configuration
@@ -268,4 +291,5 @@ Initial project scaffolding, dependency installation, and development environmen
 - Supabase project created and environment variables configured
 
 ## Estimated Time
+
 0.5 day

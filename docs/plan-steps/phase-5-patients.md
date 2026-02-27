@@ -1,6 +1,7 @@
 # 🧑‍⚕️ Phase 5 — Patient Management
 
 ## Overview
+
 Complete patient management system with CRUD operations, patient profiles, and medical records.
 
 ## Steps
@@ -9,13 +10,19 @@ Complete patient management system with CRUD operations, patient profiles, and m
 
 ```tsx
 // app/[locale]/(dashboard)/patients/page.tsx
-import { Suspense } from 'react'
-import { PatientsList } from '@/components/patients/PatientsList'
-import { Button } from '@/components/ui/button'
-import { Plus, Search } from 'lucide-react'
-import { Input } from '@/components/ui/input'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import Link from 'next/link'
+import { Suspense } from 'react';
+import { PatientsList } from '@/components/patients/PatientsList';
+import { Button } from '@/components/ui/button';
+import { Plus, Search } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import Link from 'next/link';
 
 export default function PatientsPage() {
   return (
@@ -24,7 +31,9 @@ export default function PatientsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Patients</h1>
-          <p className="text-muted-foreground">Manage patient records and information</p>
+          <p className="text-muted-foreground">
+            Manage patient records and information
+          </p>
         </div>
         <Link href="/patients/new">
           <Button>
@@ -46,10 +55,7 @@ export default function PatientsPage() {
           <div className="flex items-center space-x-4">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                placeholder="Search patients..."
-                className="pl-10"
-              />
+              <Input placeholder="Search patients..." className="pl-10" />
             </div>
           </div>
         </CardContent>
@@ -60,7 +66,7 @@ export default function PatientsPage() {
         <PatientsList />
       </Suspense>
     </div>
-  )
+  );
 }
 ```
 
@@ -68,49 +74,50 @@ export default function PatientsPage() {
 
 ```tsx
 // components/patients/PatientsList.tsx
-'use client'
-import { useState, useEffect } from 'react'
-import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Card, CardContent } from '@/components/ui/card'
-import { MoreHorizontal, Edit, FileText, Calendar } from 'lucide-react'
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuTrigger 
-} from '@/components/ui/dropdown-menu'
-import { format } from 'date-fns'
-import { getPatients } from '@/lib/supabase/queries'
-import type { Patient } from '@/types'
+'use client';
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Card, CardContent } from '@/components/ui/card';
+import { MoreHorizontal, Edit, FileText, Calendar } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { format } from 'date-fns';
+import { getPatients } from '@/lib/supabase/queries';
+import type { Patient } from '@/types';
 
 export function PatientsList() {
-  const [patients, setPatients] = useState<Patient[]>([])
-  const [loading, setLoading] = useState(true)
-  const [searchTerm, setSearchTerm] = useState('')
+  const [patients, setPatients] = useState<Patient[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    loadPatients()
-  }, [])
+    loadPatients();
+  }, []);
 
   const loadPatients = async () => {
     try {
-      const data = await getPatients()
-      setPatients(data)
+      const data = await getPatients();
+      setPatients(data);
     } catch (error) {
-      console.error('Error loading patients:', error)
+      console.error('Error loading patients:', error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
-  const filteredPatients = patients.filter(patient =>
-    patient.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    patient.phone?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    patient.email?.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  const filteredPatients = patients.filter(
+    (patient) =>
+      patient.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      patient.phone?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      patient.email?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   if (loading) {
     return (
@@ -130,7 +137,7 @@ export function PatientsList() {
           </Card>
         ))}
       </div>
-    )
+    );
   }
 
   if (filteredPatients.length === 0) {
@@ -140,7 +147,9 @@ export function PatientsList() {
           <div className="text-center">
             <h3 className="text-lg font-semibold mb-2">No patients found</h3>
             <p className="text-muted-foreground mb-4">
-              {searchTerm ? 'Try adjusting your search terms' : 'Get started by adding your first patient'}
+              {searchTerm
+                ? 'Try adjusting your search terms'
+                : 'Get started by adding your first patient'}
             </p>
             <Button asChild>
               <Link href="/patients/new">Add Patient</Link>
@@ -148,7 +157,7 @@ export function PatientsList() {
           </div>
         </CardContent>
       </Card>
-    )
+    );
   }
 
   return (
@@ -161,7 +170,11 @@ export function PatientsList() {
                 <Avatar className="h-12 w-12">
                   <AvatarImage src={patient.avatar_url} />
                   <AvatarFallback>
-                    {patient.full_name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                    {patient.full_name
+                      .split(' ')
+                      .map((n) => n[0])
+                      .join('')
+                      .toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <div className="space-y-1">
@@ -200,28 +213,26 @@ export function PatientsList() {
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-            
+
             {patient.notes && (
               <p className="mt-4 text-sm text-muted-foreground line-clamp-2">
                 {patient.notes}
               </p>
             )}
-            
+
             <div className="mt-4 flex items-center justify-between">
               <Badge variant="outline">
                 Patient since {format(new Date(patient.created_at), 'MMM yyyy')}
               </Badge>
               <Button variant="outline" size="sm" asChild>
-                <Link href={`/patients/${patient.id}`}>
-                  View Details
-                </Link>
+                <Link href={`/patients/${patient.id}`}>View Details</Link>
               </Button>
             </div>
           </CardContent>
         </Card>
       ))}
     </div>
-  )
+  );
 }
 ```
 
@@ -229,50 +240,71 @@ export function PatientsList() {
 
 ```tsx
 // components/patients/PatientForm.tsx
-'use client'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { patientSchema, type PatientFormData } from '@/lib/validations/patient'
-import { Button } from '@/components/ui/button'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Textarea } from '@/components/ui/textarea'
-import { Calendar } from '@/components/ui/calendar'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { CalendarIcon } from 'lucide-react'
-import { format } from 'date-fns'
-import { cn } from '@/lib/utils'
-import { useToast } from '@/hooks/use-toast'
+'use client';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { patientSchema, type PatientFormData } from '@/lib/validations/patient';
+import { Button } from '@/components/ui/button';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { Calendar } from '@/components/ui/calendar';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { CalendarIcon } from 'lucide-react';
+import { format } from 'date-fns';
+import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
 
 interface PatientFormProps {
-  initialData?: Partial<PatientFormData>
-  onSubmit: (data: PatientFormData) => Promise<void>
-  isLoading?: boolean
+  initialData?: Partial<PatientFormData>;
+  onSubmit: (data: PatientFormData) => Promise<void>;
+  isLoading?: boolean;
 }
 
-export function PatientForm({ initialData, onSubmit, isLoading }: PatientFormProps) {
-  const { toast } = useToast()
+export function PatientForm({
+  initialData,
+  onSubmit,
+  isLoading,
+}: PatientFormProps) {
+  const { toast } = useToast();
   const form = useForm<PatientFormData>({
     resolver: zodResolver(patientSchema),
     defaultValues: initialData,
-  })
+  });
 
   const handleSubmit = async (data: PatientFormData) => {
     try {
-      await onSubmit(data)
+      await onSubmit(data);
       toast({
         title: 'Success',
         description: 'Patient saved successfully',
-      })
+      });
     } catch (error) {
       toast({
         title: 'Error',
         description: 'Failed to save patient',
-        variant: 'destructive'
-      })
+        variant: 'destructive',
+      });
     }
-  }
+  };
 
   return (
     <Form {...form}>
@@ -291,7 +323,7 @@ export function PatientForm({ initialData, onSubmit, isLoading }: PatientFormPro
               </FormItem>
             )}
           />
-          
+
           <FormField
             control={form.control}
             name="dob"
@@ -308,7 +340,9 @@ export function PatientForm({ initialData, onSubmit, isLoading }: PatientFormPro
                           !field.value && 'text-muted-foreground'
                         )}
                       >
-                        {field.value ? format(new Date(field.value), 'PPP') : 'Pick a date'}
+                        {field.value
+                          ? format(new Date(field.value), 'PPP')
+                          : 'Pick a date'}
                         <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                       </Button>
                     </FormControl>
@@ -317,7 +351,9 @@ export function PatientForm({ initialData, onSubmit, isLoading }: PatientFormPro
                     <Calendar
                       mode="single"
                       selected={field.value ? new Date(field.value) : undefined}
-                      onSelect={(date) => field.onChange(date?.toISOString().split('T')[0])}
+                      onSelect={(date) =>
+                        field.onChange(date?.toISOString().split('T')[0])
+                      }
                       initialFocus
                     />
                   </PopoverContent>
@@ -335,7 +371,10 @@ export function PatientForm({ initialData, onSubmit, isLoading }: PatientFormPro
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Gender</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select gender" />
@@ -351,7 +390,7 @@ export function PatientForm({ initialData, onSubmit, isLoading }: PatientFormPro
               </FormItem>
             )}
           />
-          
+
           <FormField
             control={form.control}
             name="phone"
@@ -388,7 +427,10 @@ export function PatientForm({ initialData, onSubmit, isLoading }: PatientFormPro
             <FormItem>
               <FormLabel>Address</FormLabel>
               <FormControl>
-                <Textarea placeholder="Street address, city, state, zip code" {...field} />
+                <Textarea
+                  placeholder="Street address, city, state, zip code"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -402,10 +444,10 @@ export function PatientForm({ initialData, onSubmit, isLoading }: PatientFormPro
             <FormItem>
               <FormLabel>Medical Notes</FormLabel>
               <FormControl>
-                <Textarea 
-                  placeholder="Allergies, medical conditions, medications, etc." 
+                <Textarea
+                  placeholder="Allergies, medical conditions, medications, etc."
                   className="min-h-[100px]"
-                  {...field} 
+                  {...field}
                 />
               </FormControl>
               <FormMessage />
@@ -423,7 +465,7 @@ export function PatientForm({ initialData, onSubmit, isLoading }: PatientFormPro
         </div>
       </form>
     </Form>
-  )
+  );
 }
 ```
 
@@ -431,27 +473,35 @@ export function PatientForm({ initialData, onSubmit, isLoading }: PatientFormPro
 
 ```tsx
 // app/[locale]/(dashboard)/patients/[id]/page.tsx
-import { notFound } from 'next/navigation'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Phone, Mail, MapPin, Calendar, Edit, FileText } from 'lucide-react'
-import { format } from 'date-fns'
-import Link from 'next/link'
-import { getPatientById } from '@/lib/supabase/queries'
-import { PatientRecords } from '@/components/patients/PatientRecords'
-import { PatientAppointments } from '@/components/patients/PatientAppointments'
+import { notFound } from 'next/navigation';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Phone, Mail, MapPin, Calendar, Edit, FileText } from 'lucide-react';
+import { format } from 'date-fns';
+import Link from 'next/link';
+import { getPatientById } from '@/lib/supabase/queries';
+import { PatientRecords } from '@/components/patients/PatientRecords';
+import { PatientAppointments } from '@/components/patients/PatientAppointments';
 
 interface PatientProfilePageProps {
-  params: { id: string }
+  params: { id: string };
 }
 
-export default async function PatientProfilePage({ params }: PatientProfilePageProps) {
-  const patient = await getPatientById(params.id)
+export default async function PatientProfilePage({
+  params,
+}: PatientProfilePageProps) {
+  const patient = await getPatientById(params.id);
 
   if (!patient) {
-    notFound()
+    notFound();
   }
 
   return (
@@ -507,15 +557,19 @@ export default async function PatientProfilePage({ params }: PatientProfilePageP
                   </div>
                 )}
               </div>
-              
+
               <div className="space-y-2">
                 <h4 className="font-medium">Personal Details</h4>
                 {patient.dob && (
                   <div className="flex items-center space-x-2 text-sm">
                     <Calendar className="h-4 w-4 text-muted-foreground" />
                     <span>
-                      Born {format(new Date(patient.dob), 'MMM d, yyyy')} 
-                      ({Math.floor((Date.now() - new Date(patient.dob).getTime()) / (365.25 * 24 * 60 * 60 * 1000))} years)
+                      Born {format(new Date(patient.dob), 'MMM d, yyyy')}(
+                      {Math.floor(
+                        (Date.now() - new Date(patient.dob).getTime()) /
+                          (365.25 * 24 * 60 * 60 * 1000)
+                      )}{' '}
+                      years)
                     </span>
                   </div>
                 )}
@@ -528,7 +582,7 @@ export default async function PatientProfilePage({ params }: PatientProfilePageP
                 )}
               </div>
             </div>
-            
+
             {patient.notes && (
               <div>
                 <h4 className="font-medium mb-2">Medical Notes</h4>
@@ -574,23 +628,24 @@ export default async function PatientProfilePage({ params }: PatientProfilePageP
           <TabsTrigger value="records">Medical Records</TabsTrigger>
           <TabsTrigger value="appointments">Appointments</TabsTrigger>
         </TabsList>
-        
+
         <TabsContent value="records">
           <PatientRecords patientId={patient.id} />
         </TabsContent>
-        
+
         <TabsContent value="appointments">
           <PatientAppointments patientId={patient.id} />
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }
 ```
 
 ## Implementation Steps
 
 ### Patient Management
+
 - [ ] Create patient list page with search and filtering
 - [ ] Build patient form with validation
 - [ ] Implement patient profile page with tabs
@@ -598,18 +653,21 @@ export default async function PatientProfilePage({ params }: PatientProfilePageP
 - [ ] Add patient appointment history
 
 ### Data Operations
+
 - [ ] Implement CRUD operations for patients
 - [ ] Add patient search functionality
 - [ ] Create medical records system
 - [ ] Build appointment history tracking
 
 ### User Experience
+
 - [ ] Add loading states and error handling
 - [ ] Implement responsive design
 - [ ] Add quick action buttons
 - [ ] Create empty states
 
 ## Deliverables
+
 - Complete patient management system
 - Patient profiles with medical history
 - Search and filtering capabilities
@@ -617,4 +675,5 @@ export default async function PatientProfilePage({ params }: PatientProfilePageP
 - Appointment history integration
 
 ## Estimated Time
+
 2 days

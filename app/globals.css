@@ -1,6 +1,6 @@
-@import "tailwindcss";
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -71,7 +71,7 @@
   --chart-1: oklch(0.55 0.18 200); /* Primary blue */
   --chart-2: oklch(0.65 0.15 180); /* Teal */
   --chart-3: oklch(0.45 0.12 220); /* Deep blue */
-  --chart-4: oklch(0.75 0.10 160); /* Mint */
+  --chart-4: oklch(0.75 0.1 160); /* Mint */
   --chart-5: oklch(0.85 0.08 140); /* Seafoam */
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);

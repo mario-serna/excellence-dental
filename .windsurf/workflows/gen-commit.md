@@ -9,6 +9,7 @@ This workflow analyzes all changes, groups them intelligently by scope/feature, 
 ## Steps
 
 1. **Analyze all changes** - Examine git status and diff to understand what changed
+
    ```bash
    git status --porcelain
    git diff
@@ -21,12 +22,13 @@ This workflow analyzes all changes, groups them intelligently by scope/feature, 
    - Group related functionality together
 
 3. **Show grouping summary** - Display groups with files and suggested commit messages
+
    ```
    Group 1: feat(core): add authentication module
    ├── src/auth/login.js
    ├── src/auth/register.js
    └── src/auth/middleware.js
-   
+
    Group 2: feat(ui): add user dashboard
    ├── components/Dashboard.jsx
    └── styles/dashboard.css
@@ -65,6 +67,7 @@ The workflow generates commit messages following this structure:
 ```
 
 **Example with body:**
+
 ```
 feat(auth): implement user authentication
 
@@ -75,6 +78,7 @@ feat(auth): implement user authentication
 ```
 
 **Command preview example:**
+
 ```bash
 git commit -m "feat(auth): implement user authentication
 
@@ -87,6 +91,7 @@ git commit -m "feat(auth): implement user authentication
 ## Usage
 
 Run this workflow when you:
+
 - Have multiple changes that need intelligent grouping
 - Want to ensure atomic, dependency-safe commits
 - Need to organize complex changes into logical units
@@ -95,6 +100,7 @@ Run this workflow when you:
 ## Grouping Algorithm
 
 The workflow uses these heuristics for grouping:
+
 - **File relationships**: Files in same directory or related directories
 - **Feature cohesion**: Files that implement the same feature
 - **Dependency analysis**: Ensure grouped files don't break existing functionality

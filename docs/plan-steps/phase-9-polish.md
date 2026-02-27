@@ -1,6 +1,7 @@
 # ✅ Phase 9 — Polish & POC Wrap-up
 
 ## Overview
+
 Final refinements including loading states, error handling, mobile responsiveness, and demo data seeding.
 
 ## Steps
@@ -9,8 +10,8 @@ Final refinements including loading states, error handling, mobile responsivenes
 
 ```tsx
 // components/ui/SkeletonCard.tsx
-import { Skeleton } from '@/components/ui/skeleton'
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
 export function SkeletonCard() {
   return (
@@ -25,12 +26,18 @@ export function SkeletonCard() {
         <Skeleton className="h-3 w-2/3" />
       </CardContent>
     </Card>
-  )
+  );
 }
 
 // components/ui/SkeletonTable.tsx
-import { Skeleton } from '@/components/ui/skeleton'
-import { Table, TableBody, TableCell, TableHead, TableRow } from '@/components/ui/table'
+import { Skeleton } from '@/components/ui/skeleton';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+} from '@/components/ui/table';
 
 export function SkeletonTable({ rows = 5 }: { rows?: number }) {
   return (
@@ -47,17 +54,29 @@ export function SkeletonTable({ rows = 5 }: { rows?: number }) {
       <TableBody>
         {Array.from({ length: rows }).map((_, index) => (
           <TableRow key={index}>
-            <TableCell><Skeleton className="h-4 w-32" /></TableCell>
-            <TableCell><Skeleton className="h-4 w-40" /></TableCell>
-            <TableCell><Skeleton className="h-4 w-20" /></TableCell>
-            <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-            <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-            <TableCell><Skeleton className="h-8 w-8" /></TableCell>
+            <TableCell>
+              <Skeleton className="h-4 w-32" />
+            </TableCell>
+            <TableCell>
+              <Skeleton className="h-4 w-40" />
+            </TableCell>
+            <TableCell>
+              <Skeleton className="h-4 w-20" />
+            </TableCell>
+            <TableCell>
+              <Skeleton className="h-4 w-16" />
+            </TableCell>
+            <TableCell>
+              <Skeleton className="h-4 w-24" />
+            </TableCell>
+            <TableCell>
+              <Skeleton className="h-8 w-8" />
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>
     </Table>
-  )
+  );
 }
 ```
 
@@ -65,27 +84,27 @@ export function SkeletonTable({ rows = 5 }: { rows?: number }) {
 
 ```tsx
 // components/ui/EmptyState.tsx
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 
 interface EmptyStateProps {
-  icon: React.ComponentType<any>
-  title: string
-  description: string
+  icon: React.ComponentType<any>;
+  title: string;
+  description: string;
   action?: {
-    label: string
-    onClick: () => void
-  }
-  className?: string
+    label: string;
+    onClick: () => void;
+  };
+  className?: string;
 }
 
-export function EmptyState({ 
-  icon: Icon, 
-  title, 
-  description, 
+export function EmptyState({
+  icon: Icon,
+  title,
+  description,
   action,
-  className 
+  className,
 }: EmptyStateProps) {
   return (
     <Card className={cn('border-dashed', className)}>
@@ -97,14 +116,10 @@ export function EmptyState({
         <p className="text-muted-foreground text-center mb-6 max-w-sm">
           {description}
         </p>
-        {action && (
-          <Button onClick={action.onClick}>
-            {action.label}
-          </Button>
-        )}
+        {action && <Button onClick={action.onClick}>{action.label}</Button>}
       </CardContent>
     </Card>
-  )
+  );
 }
 ```
 
@@ -112,11 +127,11 @@ export function EmptyState({
 
 ```tsx
 // components/ui/toaster.tsx
-import { Toaster as SonnerToaster } from 'sonner'
-import { useTheme } from 'next-themes'
+import { Toaster as SonnerToaster } from 'sonner';
+import { useTheme } from 'next-themes';
 
 export function Toaster() {
-  const { theme = 'system' } = useTheme()
+  const { theme = 'system' } = useTheme();
 
   return (
     <SonnerToaster
@@ -134,7 +149,7 @@ export function Toaster() {
         },
       }}
     />
-  )
+  );
 }
 ```
 
@@ -142,8 +157,8 @@ export function Toaster() {
 
 ```tsx
 // components/ui/ConfirmDialog.tsx
-'use client'
-import { useState } from 'react'
+'use client';
+import { useState } from 'react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -154,18 +169,18 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/components/ui/alert-dialog'
-import { Button } from '@/components/ui/button'
-import { AlertTriangle } from 'lucide-react'
+} from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
+import { AlertTriangle } from 'lucide-react';
 
 interface ConfirmDialogProps {
-  children: React.ReactNode
-  title: string
-  description: string
-  confirmText?: string
-  cancelText?: string
-  onConfirm: () => Promise<void>
-  variant?: 'default' | 'destructive'
+  children: React.ReactNode;
+  title: string;
+  description: string;
+  confirmText?: string;
+  cancelText?: string;
+  onConfirm: () => Promise<void>;
+  variant?: 'default' | 'destructive';
 }
 
 export function ConfirmDialog({
@@ -175,28 +190,26 @@ export function ConfirmDialog({
   confirmText = 'Confirm',
   cancelText = 'Cancel',
   onConfirm,
-  variant = 'default'
+  variant = 'default',
 }: ConfirmDialogProps) {
-  const [open, setOpen] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleConfirm = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
-      await onConfirm()
-      setOpen(false)
+      await onConfirm();
+      setOpen(false);
     } catch (error) {
-      console.error('Confirmation action failed:', error)
+      console.error('Confirmation action failed:', error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
-      <AlertDialogTrigger asChild>
-        {children}
-      </AlertDialogTrigger>
+      <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle className="flex items-center gap-2">
@@ -205,25 +218,25 @@ export function ConfirmDialog({
             )}
             {title}
           </AlertDialogTitle>
-          <AlertDialogDescription>
-            {description}
-          </AlertDialogDescription>
+          <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={loading}>
-            {cancelText}
-          </AlertDialogCancel>
+          <AlertDialogCancel disabled={loading}>{cancelText}</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleConfirm}
             disabled={loading}
-            className={variant === 'destructive' ? 'bg-destructive hover:bg-destructive/90' : ''}
+            className={
+              variant === 'destructive'
+                ? 'bg-destructive hover:bg-destructive/90'
+                : ''
+            }
           >
             {loading ? 'Processing...' : confirmText}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  )
+  );
 }
 ```
 
@@ -231,15 +244,15 @@ export function ConfirmDialog({
 
 ```tsx
 // components/layout/MobileSidebar.tsx
-'use client'
-import { useState } from 'react'
-import { Menu, X } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
-import { Sidebar } from './Sidebar'
+'use client';
+import { useState } from 'react';
+import { Menu, X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sidebar } from './Sidebar';
 
 export function MobileSidebar() {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -260,7 +273,7 @@ export function MobileSidebar() {
         </div>
       </SheetContent>
     </Sheet>
-  )
+  );
 }
 ```
 
@@ -268,12 +281,12 @@ export function MobileSidebar() {
 
 ```typescript
 // scripts/seed-database.ts
-import { createClient } from '@supabase/supabase-js'
+import { createClient } from '@supabase/supabase-js';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+);
 
 const demoDoctors = [
   {
@@ -289,8 +302,8 @@ const demoDoctors = [
     phone: '+1-555-0124',
     email: 'michael.chen@dental-clinic.com',
     is_active: true,
-  }
-]
+  },
+];
 
 const demoPatients = [
   {
@@ -312,7 +325,7 @@ const demoPatients = [
     notes: 'Regular patient, history of orthodontic work',
   },
   // Add 8 more patients...
-]
+];
 
 const demoAppointments = [
   {
@@ -325,80 +338,85 @@ const demoAppointments = [
     notes: 'Regular 6-month checkup',
   },
   // Add more appointments...
-]
+];
 
 async function seedDatabase() {
-  console.log('Starting database seeding...')
+  console.log('Starting database seeding...');
 
   try {
     // Create doctors
-    console.log('Creating doctors...')
+    console.log('Creating doctors...');
     const { data: createdDoctors, error: doctorsError } = await supabase
       .from('profiles')
       .upsert(demoDoctors, { onConflict: 'email' })
-      .select()
+      .select();
 
-    if (doctorsError) throw doctorsError
-    console.log(`Created ${createdDoctors?.length || 0} doctors`)
+    if (doctorsError) throw doctorsError;
+    console.log(`Created ${createdDoctors?.length || 0} doctors`);
 
     // Create patients
-    console.log('Creating patients...')
+    console.log('Creating patients...');
     const { data: createdPatients, error: patientsError } = await supabase
       .from('patients')
       .upsert(demoPatients, { onConflict: 'email' })
-      .select()
+      .select();
 
-    if (patientsError) throw patientsError
-    console.log(`Created ${createdPatients?.length || 0} patients`)
+    if (patientsError) throw patientsError;
+    console.log(`Created ${createdPatients?.length || 0} patients`);
 
     // Create appointments (linking to created doctors and patients)
-    console.log('Creating appointments...')
+    console.log('Creating appointments...');
     const appointmentsWithIds = demoAppointments.map((apt, index) => ({
       ...apt,
-      patient_id: createdPatients?.[index % (createdPatients?.length || 1)]?.id || '',
-      doctor_id: createdDoctors?.[index % (createdDoctors?.length || 1)]?.id || '',
-    }))
+      patient_id:
+        createdPatients?.[index % (createdPatients?.length || 1)]?.id || '',
+      doctor_id:
+        createdDoctors?.[index % (createdDoctors?.length || 1)]?.id || '',
+    }));
 
-    const { data: createdAppointments, error: appointmentsError } = await supabase
-      .from('appointments')
-      .insert(appointmentsWithIds)
-      .select()
+    const { data: createdAppointments, error: appointmentsError } =
+      await supabase.from('appointments').insert(appointmentsWithIds).select();
 
-    if (appointmentsError) throw appointmentsError
-    console.log(`Created ${createdAppointments?.length || 0} appointments`)
+    if (appointmentsError) throw appointmentsError;
+    console.log(`Created ${createdAppointments?.length || 0} appointments`);
 
-    console.log('Database seeding completed successfully!')
-    console.log('Demo users:')
-    console.log('Admin: admin@dental-clinic.com / Admin123!')
-    console.log('Doctor: sarah.johnson@dental-clinic.com / Doctor123!')
-    console.log('Assistant: assistant@dental-clinic.com / Assistant123!')
-
+    console.log('Database seeding completed successfully!');
+    console.log('Demo users:');
+    console.log('Admin: admin@dental-clinic.com / Admin123!');
+    console.log('Doctor: sarah.johnson@dental-clinic.com / Doctor123!');
+    console.log('Assistant: assistant@dental-clinic.com / Assistant123!');
   } catch (error) {
-    console.error('Database seeding failed:', error)
+    console.error('Database seeding failed:', error);
   }
 }
 
 // Run if called directly
 if (require.main === module) {
-  seedDatabase()
+  seedDatabase();
 }
 
-export { seedDatabase }
+export { seedDatabase };
 ```
 
 ### 9.7 Error Boundary
 
 ```tsx
 // components/ErrorBoundary.tsx
-'use client'
-import { Component, ErrorInfo, ReactNode } from 'react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { AlertTriangle, RefreshCw } from 'lucide-react'
+'use client';
+import { Component, ErrorInfo, ReactNode } from 'react';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { AlertTriangle, RefreshCw } from 'lucide-react';
 
 interface ErrorBoundaryState {
-  hasError: boolean
-  error?: Error
+  hasError: boolean;
+  error?: Error;
 }
 
 export class ErrorBoundary extends Component<
@@ -406,17 +424,17 @@ export class ErrorBoundary extends Component<
   ErrorBoundaryState
 > {
   constructor(props: any) {
-    super(props)
-    this.state = { hasError: false }
+    super(props);
+    this.state = { hasError: false };
   }
 
   static getDerivedStateFromError(error: Error): ErrorBoundaryState {
-    return { hasError: true, error }
+    return { hasError: true, error };
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('Error caught by boundary:', error, errorInfo)
-    
+    console.error('Error caught by boundary:', error, errorInfo);
+
     // Log to error reporting service
     // reportError(error, errorInfo)
   }
@@ -424,7 +442,7 @@ export class ErrorBoundary extends Component<
   render() {
     if (this.state.hasError) {
       if (this.props.fallback) {
-        return this.props.fallback
+        return this.props.fallback;
       }
 
       return (
@@ -441,7 +459,8 @@ export class ErrorBoundary extends Component<
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-sm text-muted-foreground text-center">
-                We apologize for the inconvenience. Please try refreshing the page or contact support if the problem persists.
+                We apologize for the inconvenience. Please try refreshing the
+                page or contact support if the problem persists.
               </p>
               <div className="flex justify-center">
                 <Button
@@ -455,10 +474,10 @@ export class ErrorBoundary extends Component<
             </CardContent>
           </Card>
         </div>
-      )
+      );
     }
 
-    return this.props.children
+    return this.props.children;
   }
 }
 ```
@@ -467,23 +486,23 @@ export class ErrorBoundary extends Component<
 
 ```typescript
 // lib/performance.ts
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 
 // Debounce hook for search inputs
 export function useDebounce<T>(value: T, delay: number): T {
-  const [debouncedValue, setDebouncedValue] = useState<T>(value)
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      setDebouncedValue(value)
-    }, delay)
+      setDebouncedValue(value);
+    }, delay);
 
     return () => {
-      clearTimeout(handler)
-    }
-  }, [value, delay])
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
 
-  return debouncedValue
+  return debouncedValue;
 }
 
 // Virtual scrolling for large lists
@@ -492,53 +511,58 @@ export function useVirtualScroll<T>(
   itemHeight: number,
   containerHeight: number
 ) {
-  const [scrollTop, setScrollTop] = useState(0)
-  
-  const startIndex = Math.floor(scrollTop / itemHeight)
+  const [scrollTop, setScrollTop] = useState(0);
+
+  const startIndex = Math.floor(scrollTop / itemHeight);
   const endIndex = Math.min(
     startIndex + Math.ceil(containerHeight / itemHeight) + 1,
     items.length
-  )
-  
-  const visibleItems = items.slice(startIndex, endIndex)
-  const offsetY = startIndex * itemHeight
-  
+  );
+
+  const visibleItems = items.slice(startIndex, endIndex);
+  const offsetY = startIndex * itemHeight;
+
   return {
     visibleItems,
     offsetY,
     totalHeight: items.length * itemHeight,
-    onScroll: setScrollTop
-  }
+    onScroll: setScrollTop,
+  };
 }
 ```
 
 ## Implementation Steps
 
 ### Polish & UX
+
 - [ ] Add loading skeletons to all data-fetching components
 - [ ] Implement empty states with helpful CTAs
 - [ ] Add toast notifications for all user actions
 - [ ] Create confirmation dialogs for destructive actions
 
 ### Mobile Responsiveness
+
 - [ ] Test and optimize mobile layouts
 - [ ] Implement mobile-specific navigation
 - [ ] Add touch-friendly interactions
 - [ ] Optimize performance for mobile devices
 
 ### Error Handling
+
 - [ ] Implement error boundaries
 - [ ] Add comprehensive error logging
 - [ ] Create user-friendly error messages
 - [ ] Add retry mechanisms where appropriate
 
 ### Demo Data
+
 - [ ] Create database seeding script
 - [ ] Add realistic demo data
 - [ ] Create test user accounts
 - [ ] Document demo credentials
 
 ## Deliverables
+
 - Polished, production-ready application
 - Comprehensive error handling
 - Mobile-responsive design
@@ -546,4 +570,5 @@ export function useVirtualScroll<T>(
 - Performance optimizations
 
 ## Estimated Time
+
 1 day

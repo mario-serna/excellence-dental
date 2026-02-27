@@ -1,11 +1,13 @@
 # 🗄️ Phase 1 — Database & Auth Setup
 
 ## Overview
+
 Database schema creation, Row Level Security (RLS) policies, and authentication triggers setup.
 
 ## 1.1 Run Migrations
 
 ### Schema Definition
+
 ```sql
 -- 001_initial_schema.sql
 
@@ -87,6 +89,7 @@ for each row execute function update_updated_at();
 ## 1.2 Row Level Security (RLS)
 
 ### Security Policies
+
 ```sql
 -- Enable RLS on all tables
 alter table profiles       enable row level security;
@@ -145,6 +148,7 @@ create policy "Doctor and admin can update appointments"
 ## 1.3 Set Up Supabase Auth Trigger
 
 ### Automatic Profile Creation
+
 ```sql
 -- Auto-create profile row when a new auth user is created
 create or replace function handle_new_user()
@@ -168,6 +172,7 @@ for each row execute function handle_new_user();
 ## Implementation Steps
 
 ### Database Setup
+
 - [ ] Access Supabase Dashboard → SQL Editor
 - [ ] Run `001_initial_schema.sql` migration
 - [ ] Run RLS policies migration
@@ -176,6 +181,7 @@ for each row execute function handle_new_user();
 - [ ] Test RLS policies with different user roles
 
 ### Verification
+
 - [ ] Create test users for each role (admin, doctor, assistant)
 - [ ] Verify profile auto-creation on user signup
 - [ ] Test RLS policies:
@@ -185,10 +191,12 @@ for each row execute function handle_new_user();
   - Only doctors/admin can update appointments
 
 ## Deliverables
+
 - Complete database schema with all tables
 - Row Level Security policies implemented
 - Authentication triggers for profile creation
 - Test data and user verification
 
 ## Estimated Time
+
 1 day

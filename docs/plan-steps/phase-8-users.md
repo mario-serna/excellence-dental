@@ -1,6 +1,7 @@
 # 👤 Phase 8 — User Management (Admin Only)
 
 ## Overview
+
 Admin-only user management system with role-based access control, user invitations, and profile management.
 
 ## Steps
@@ -9,25 +10,31 @@ Admin-only user management system with role-based access control, user invitatio
 
 ```tsx
 // app/[locale]/(dashboard)/admin/users/page.tsx
-'use client'
-import { useState, useEffect } from 'react'
-import { UsersList } from '@/components/admin/UsersList'
-import { Button } from '@/components/ui/button'
-import { Plus, Search, UserPlus } from 'lucide-react'
-import { Input } from '@/components/ui/input'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { RoleGuard } from '@/components/layout/RoleGuard'
-import { useRole } from '@/hooks/useRole'
+'use client';
+import { useState, useEffect } from 'react';
+import { UsersList } from '@/components/admin/UsersList';
+import { Button } from '@/components/ui/button';
+import { Plus, Search, UserPlus } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { RoleGuard } from '@/components/layout/RoleGuard';
+import { useRole } from '@/hooks/useRole';
 
 export default function UsersPage() {
-  const { isAdmin } = useRole()
+  const { isAdmin } = useRole();
 
   if (!isAdmin) {
     return (
       <RoleGuard allowedRoles={['admin']}>
         <div>Access denied</div>
       </RoleGuard>
-    )
+    );
   }
 
   return (
@@ -36,7 +43,9 @@ export default function UsersPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">User Management</h1>
-          <p className="text-muted-foreground">Manage clinic staff and permissions</p>
+          <p className="text-muted-foreground">
+            Manage clinic staff and permissions
+          </p>
         </div>
         <Button>
           <UserPlus className="mr-2 h-4 w-4" />
@@ -48,18 +57,13 @@ export default function UsersPage() {
       <Card>
         <CardHeader>
           <CardTitle>Search Users</CardTitle>
-          <CardDescription>
-            Find users by name, email, or role
-          </CardDescription>
+          <CardDescription>Find users by name, email, or role</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex items-center space-x-4">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                placeholder="Search users..."
-                className="pl-10"
-              />
+              <Input placeholder="Search users..." className="pl-10" />
             </div>
           </div>
         </CardContent>
@@ -68,7 +72,7 @@ export default function UsersPage() {
       {/* Users List */}
       <UsersList />
     </div>
-  )
+  );
 }
 ```
 
@@ -76,81 +80,92 @@ export default function UsersPage() {
 
 ```tsx
 // components/admin/UsersList.tsx
-'use client'
-import { useState, useEffect } from 'react'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Card, CardContent } from '@/components/ui/card'
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
+'use client';
+import { useState, useEffect } from 'react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Card, CardContent } from '@/components/ui/card';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuTrigger,
-  DropdownMenuSeparator
-} from '@/components/ui/dropdown-menu'
-import { MoreHorizontal, Edit, Trash2, Mail, Shield, ShieldOff } from 'lucide-react'
-import { format } from 'date-fns'
-import { getUsers } from '@/lib/supabase/queries'
-import type { Profile } from '@/types'
-import { useToast } from '@/hooks/use-toast'
+  DropdownMenuSeparator,
+} from '@/components/ui/dropdown-menu';
+import {
+  MoreHorizontal,
+  Edit,
+  Trash2,
+  Mail,
+  Shield,
+  ShieldOff,
+} from 'lucide-react';
+import { format } from 'date-fns';
+import { getUsers } from '@/lib/supabase/queries';
+import type { Profile } from '@/types';
+import { useToast } from '@/hooks/use-toast';
 
 export function UsersList() {
-  const [users, setUsers] = useState<Profile[]>([])
-  const [loading, setLoading] = useState(true)
-  const [searchTerm, setSearchTerm] = useState('')
-  const { toast } = useToast()
+  const [users, setUsers] = useState<Profile[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const { toast } = useToast();
 
   useEffect(() => {
-    loadUsers()
-  }, [])
+    loadUsers();
+  }, []);
 
   const loadUsers = async () => {
     try {
-      const data = await getUsers()
-      setUsers(data)
+      const data = await getUsers();
+      setUsers(data);
     } catch (error) {
-      console.error('Error loading users:', error)
+      console.error('Error loading users:', error);
       toast({
         title: 'Error',
         description: 'Failed to load users',
-        variant: 'destructive'
-      })
+        variant: 'destructive',
+      });
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
-  const filteredUsers = users.filter(user =>
+  const filteredUsers = users.filter((user) =>
     user.full_name.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  );
 
   const toggleUserStatus = async (userId: string, currentStatus: boolean) => {
     try {
       // Implementation for toggling user status
-      console.log(`Toggling user ${userId} status to ${!currentStatus}`)
-      await loadUsers() // Refresh list
+      console.log(`Toggling user ${userId} status to ${!currentStatus}`);
+      await loadUsers(); // Refresh list
       toast({
         title: 'Success',
         description: `User ${!currentStatus ? 'activated' : 'deactivated'} successfully`,
-      })
+      });
     } catch (error) {
       toast({
         title: 'Error',
         description: 'Failed to update user status',
-        variant: 'destructive'
-      })
+        variant: 'destructive',
+      });
     }
-  }
+  };
 
   const getRoleBadgeVariant = (role: string) => {
     switch (role) {
-      case 'admin': return 'destructive'
-      case 'doctor': return 'default'
-      case 'assistant': return 'secondary'
-      default: return 'outline'
+      case 'admin':
+        return 'destructive';
+      case 'doctor':
+        return 'default';
+      case 'assistant':
+        return 'secondary';
+      default:
+        return 'outline';
     }
-  }
+  };
 
   if (loading) {
     return (
@@ -170,7 +185,7 @@ export function UsersList() {
           </Card>
         ))}
       </div>
-    )
+    );
   }
 
   if (filteredUsers.length === 0) {
@@ -180,12 +195,14 @@ export function UsersList() {
           <div className="text-center">
             <h3 className="text-lg font-semibold mb-2">No users found</h3>
             <p className="text-muted-foreground">
-              {searchTerm ? 'Try adjusting your search terms' : 'No users in the system yet'}
+              {searchTerm
+                ? 'Try adjusting your search terms'
+                : 'No users in the system yet'}
             </p>
           </div>
         </CardContent>
       </Card>
-    )
+    );
   }
 
   return (
@@ -198,7 +215,11 @@ export function UsersList() {
                 <Avatar className="h-12 w-12">
                   <AvatarImage src={user.avatar_url} />
                   <AvatarFallback>
-                    {user.full_name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                    {user.full_name
+                      .split(' ')
+                      .map((n) => n[0])
+                      .join('')
+                      .toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <div className="space-y-1">
@@ -217,9 +238,7 @@ export function UsersList() {
                     )}
                     <div className="flex items-center space-x-1">
                       <Shield className="h-4 w-4" />
-                      <span>
-                        {user.is_active ? 'Active' : 'Inactive'}
-                      </span>
+                      <span>{user.is_active ? 'Active' : 'Inactive'}</span>
                     </div>
                   </div>
                   <p className="text-xs text-muted-foreground">
@@ -227,7 +246,7 @@ export function UsersList() {
                   </p>
                 </div>
               </div>
-              
+
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="sm">
@@ -239,8 +258,10 @@ export function UsersList() {
                     <Edit className="mr-2 h-4 w-4" />
                     Edit User
                   </DropdownMenuItem>
-                  
-                  <DropdownMenuItem onClick={() => toggleUserStatus(user.id, user.is_active)}>
+
+                  <DropdownMenuItem
+                    onClick={() => toggleUserStatus(user.id, user.is_active)}
+                  >
                     {user.is_active ? (
                       <>
                         <ShieldOff className="mr-2 h-4 w-4" />
@@ -253,9 +274,9 @@ export function UsersList() {
                       </>
                     )}
                   </DropdownMenuItem>
-                  
+
                   <DropdownMenuSeparator />
-                  
+
                   <DropdownMenuItem className="text-destructive">
                     <Trash2 className="mr-2 h-4 w-4" />
                     Delete User
@@ -267,7 +288,7 @@ export function UsersList() {
         </Card>
       ))}
     </div>
-  )
+  );
 }
 ```
 
@@ -275,38 +296,57 @@ export function UsersList() {
 
 ```tsx
 // components/admin/InviteUserSheet.tsx
-'use client'
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-import { Button } from '@/components/ui/button'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet'
-import { Mail, UserPlus } from 'lucide-react'
-import { useToast } from '@/hooks/use-toast'
+'use client';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { Button } from '@/components/ui/button';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet';
+import { Mail, UserPlus } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 const inviteUserSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
   role: z.enum(['admin', 'doctor', 'assistant'], {
-    required_error: 'Please select a role'
+    required_error: 'Please select a role',
   }),
   full_name: z.string().min(2, 'Full name must be at least 2 characters'),
-})
+});
 
-type InviteUserFormData = z.infer<typeof inviteUserSchema>
+type InviteUserFormData = z.infer<typeof inviteUserSchema>;
 
 interface InviteUserSheetProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
 export function InviteUserSheet({ open, onOpenChange }: InviteUserSheetProps) {
-  const [isLoading, setIsLoading] = useState(false)
-  const { toast } = useToast()
-  
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
+
   const form = useForm<InviteUserFormData>({
     resolver: zodResolver(inviteUserSchema),
     defaultValues: {
@@ -314,11 +354,11 @@ export function InviteUserSheet({ open, onOpenChange }: InviteUserSheetProps) {
       role: 'assistant',
       full_name: '',
     },
-  })
+  });
 
   const handleSubmit = async (data: InviteUserFormData) => {
-    setIsLoading(true)
-    
+    setIsLoading(true);
+
     try {
       const response = await fetch('/api/admin/invite', {
         method: 'POST',
@@ -326,31 +366,31 @@ export function InviteUserSheet({ open, onOpenChange }: InviteUserSheetProps) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
-      })
+      });
 
-      const result = await response.json()
+      const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.error || 'Failed to invite user')
+        throw new Error(result.error || 'Failed to invite user');
       }
 
       toast({
         title: 'Success',
         description: `Invitation sent to ${data.email}`,
-      })
-      
-      form.reset()
-      onOpenChange(false)
+      });
+
+      form.reset();
+      onOpenChange(false);
     } catch (error) {
       toast({
         title: 'Error',
         description: error.message || 'Failed to send invitation',
-        variant: 'destructive'
-      })
+        variant: 'destructive',
+      });
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -364,10 +404,13 @@ export function InviteUserSheet({ open, onOpenChange }: InviteUserSheetProps) {
             Send an invitation to join the dental clinic management system
           </SheetDescription>
         </SheetHeader>
-        
+
         <div className="px-1">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+            <form
+              onSubmit={form.handleSubmit(handleSubmit)}
+              className="space-y-6"
+            >
               <FormField
                 control={form.control}
                 name="full_name"
@@ -389,7 +432,11 @@ export function InviteUserSheet({ open, onOpenChange }: InviteUserSheetProps) {
                   <FormItem>
                     <FormLabel>Email Address</FormLabel>
                     <FormControl>
-                      <Input type="email" placeholder="Enter email address" {...field} />
+                      <Input
+                        type="email"
+                        placeholder="Enter email address"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -402,7 +449,10 @@ export function InviteUserSheet({ open, onOpenChange }: InviteUserSheetProps) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Role</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select role" />
@@ -420,9 +470,9 @@ export function InviteUserSheet({ open, onOpenChange }: InviteUserSheetProps) {
               />
 
               <div className="flex justify-end space-x-4">
-                <Button 
-                  type="button" 
-                  variant="outline" 
+                <Button
+                  type="button"
+                  variant="outline"
                   onClick={() => onOpenChange(false)}
                 >
                   Cancel
@@ -446,7 +496,7 @@ export function InviteUserSheet({ open, onOpenChange }: InviteUserSheetProps) {
         </div>
       </SheetContent>
     </Sheet>
-  )
+  );
 }
 ```
 
@@ -454,8 +504,8 @@ export function InviteUserSheet({ open, onOpenChange }: InviteUserSheetProps) {
 
 ```typescript
 // app/api/admin/invite/route.ts
-import { createClient } from '@supabase/supabase-js'
-import { NextRequest, NextResponse } from 'next/server'
+import { createClient } from '@supabase/supabase-js';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   try {
@@ -466,32 +516,32 @@ export async function POST(request: NextRequest) {
     //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     // }
 
-    const { email, role, full_name } = await request.json()
+    const { email, role, full_name } = await request.json();
 
     // Validate input
     if (!email || !role || !full_name) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
+      return NextResponse.json(
+        { error: 'Missing required fields' },
+        { status: 400 }
+      );
     }
 
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.SUPABASE_SERVICE_ROLE_KEY!
-    )
+    );
 
-    const { data, error } = await supabase.auth.admin.inviteUserByEmail(
-      email,
-      {
-        data: { full_name },
-        options: { 
-          data: { role },
-          redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/login`
-        },
-      }
-    )
+    const { data, error } = await supabase.auth.admin.inviteUserByEmail(email, {
+      data: { full_name },
+      options: {
+        data: { role },
+        redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/login`,
+      },
+    });
 
     if (error) {
-      console.error('Invite error:', error)
-      return NextResponse.json({ error: error.message }, { status: 400 })
+      console.error('Invite error:', error);
+      return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
     // Log the invitation
@@ -500,20 +550,22 @@ export async function POST(request: NextRequest) {
       role,
       full_name,
       invited_by: 'admin_user_id', // Would come from session
-      created_at: new Date().toISOString()
-    })
+      created_at: new Date().toISOString(),
+    });
 
-    return NextResponse.json({ 
-      success: true, 
+    return NextResponse.json({
+      success: true,
       message: 'Invitation sent successfully',
-      user: data
-    })
-
+      user: data,
+    });
   } catch (error) {
-    console.error('Invite API error:', error)
-    return NextResponse.json({ 
-      error: 'Internal server error' 
-    }, { status: 500 })
+    console.error('Invite API error:', error);
+    return NextResponse.json(
+      {
+        error: 'Internal server error',
+      },
+      { status: 500 }
+    );
   }
 }
 ```
@@ -521,6 +573,7 @@ export async function POST(request: NextRequest) {
 ## Implementation Steps
 
 ### User Management
+
 - [ ] Create users list with role-based filtering
 - [ ] Build user invitation system
 - [ ] Implement user status management
@@ -528,18 +581,21 @@ export async function POST(request: NextRequest) {
 - [ ] Create role-based access control
 
 ### Admin Features
+
 - [ ] Implement user invitation workflow
 - [ ] Add bulk user operations
 - [ ] Create user activity logging
 - [ ] Build permission management
 
 ### Security & Access
+
 - [ ] Protect admin routes with middleware
 - [ ] Implement role-based UI components
 - [ ] Add audit logging for admin actions
 - [ ] Create secure API endpoints
 
 ## Deliverables
+
 - Complete user management system
 - Role-based access control
 - User invitation workflow
@@ -547,4 +603,5 @@ export async function POST(request: NextRequest) {
 - Security and audit features
 
 ## Estimated Time
+
 1 day

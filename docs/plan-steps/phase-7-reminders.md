@@ -1,6 +1,7 @@
 # 🔔 Phase 7 — Reminders
 
 ## Overview
+
 Automated appointment reminder system using Supabase Edge Functions and Resend for email notifications.
 
 ## Steps
@@ -9,14 +10,14 @@ Automated appointment reminder system using Supabase Edge Functions and Resend f
 
 ```typescript
 // supabase/functions/send-reminders/index.ts
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { Resend } from "https://esm.sh/resend";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { Resend } from 'https://esm.sh/resend';
 
 const supabase = createClient(
-  Deno.env.get("SUPABASE_URL")!,
-  Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+  Deno.env.get('SUPABASE_URL')!,
+  Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
 );
-const resend = new Resend(Deno.env.get("RESEND_API_KEY")!);
+const resend = new Resend(Deno.env.get('RESEND_API_KEY')!);
 
 interface Appointment {
   id: string;
@@ -35,27 +36,31 @@ interface Appointment {
 }
 
 Deno.serve(async () => {
-  console.log("Starting reminder check...");
-  
+  console.log('Starting reminder check...');
+
   const now = new Date();
   const in24h = new Date(now.getTime() + 24 * 60 * 60 * 1000);
-  
+
   try {
     // Get appointments in next 24 hours
     const { data: appointments, error } = await supabase
-      .from("appointments")
-      .select(`
+      .from('appointments')
+      .select(
+        `
         *,
         patients(full_name, email, phone),
         profiles!appointments_doctor_id_fkey(full_name, email)
-      `)
-      .in("status", ["scheduled", "confirmed"])
-      .gte("scheduled_at", now.toISOString())
-      .lte("scheduled_at", in24h.toISOString());
+      `
+      )
+      .in('status', ['scheduled', 'confirmed'])
+      .gte('scheduled_at', now.toISOString())
+      .lte('scheduled_at', in24h.toISOString());
 
     if (error) {
-      console.error("Error fetching appointments:", error);
-      return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+      console.error('Error fetching appointments:', error);
+      return new Response(JSON.stringify({ error: error.message }), {
+        status: 500,
+      });
     }
 
     console.log(`Found ${appointments?.length || 0} appointments to remind`);
@@ -65,14 +70,17 @@ Deno.serve(async () => {
       await sendDoctorReminder(appt);
     }
 
-    return new Response(JSON.stringify({ 
-      success: true, 
-      processed: appointments?.length || 0 
-    }));
-    
+    return new Response(
+      JSON.stringify({
+        success: true,
+        processed: appointments?.length || 0,
+      })
+    );
   } catch (error) {
-    console.error("Error in reminder function:", error);
-    return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+    console.error('Error in reminder function:', error);
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+    });
   }
 });
 
@@ -89,7 +97,7 @@ async function sendPatientReminder(appointment: Appointment) {
     month: 'long',
     day: 'numeric',
     hour: 'numeric',
-    minute: '2-digit'
+    minute: '2-digit',
   });
 
   const emailHtml = `
@@ -133,12 +141,16 @@ async function sendPatientReminder(appointment: Appointment) {
               <span class="detail-label">Duration:</span>
               <span>${appointment.duration_mins} minutes</span>
             </div>
-            ${appointment.service_type ? `
+            ${
+              appointment.service_type
+                ? `
             <div class="detail-row">
               <span class="detail-label">Service:</span>
               <span>${appointment.service_type}</span>
             </div>
-            ` : ''}
+            `
+                : ''
+            }
           </div>
           
           <p><strong>Please arrive 10 minutes early</strong> to complete any necessary paperwork.</p>
@@ -155,22 +167,37 @@ async function sendPatientReminder(appointment: Appointment) {
 
   try {
     const { data, error } = await resend.emails.send({
-      from: "reminders@dental-clinic.com",
+      from: 'reminders@dental-clinic.com',
       to: appointment.patients.email,
-      subject: "Appointment Reminder - Dental Clinic",
+      subject: 'Appointment Reminder - Dental Clinic',
       html: emailHtml,
     });
 
     if (error) {
-      console.error(`Failed to send patient reminder for ${appointment.patients.email}:`, error);
-      await logReminder(appointment.id, 'email', 'patient', 'failed', error.message);
+      console.error(
+        `Failed to send patient reminder for ${appointment.patients.email}:`,
+        error
+      );
+      await logReminder(
+        appointment.id,
+        'email',
+        'patient',
+        'failed',
+        error.message
+      );
     } else {
       console.log(`Patient reminder sent to ${appointment.patients.email}`);
       await logReminder(appointment.id, 'email', 'patient', 'sent');
     }
   } catch (error) {
     console.error(`Error sending patient reminder:`, error);
-    await logReminder(appointment.id, 'email', 'patient', 'failed', error.message);
+    await logReminder(
+      appointment.id,
+      'email',
+      'patient',
+      'failed',
+      error.message
+    );
   }
 }
 
@@ -187,7 +214,7 @@ async function sendDoctorReminder(appointment: Appointment) {
     month: 'long',
     day: 'numeric',
     hour: 'numeric',
-    minute: '2-digit'
+    minute: '2-digit',
   });
 
   const emailHtml = `
@@ -231,18 +258,26 @@ async function sendDoctorReminder(appointment: Appointment) {
               <span class="detail-label">Duration:</span>
               <span>${appointment.duration_mins} minutes</span>
             </div>
-            ${appointment.service_type ? `
+            ${
+              appointment.service_type
+                ? `
             <div class="detail-row">
               <span class="detail-label">Service:</span>
               <span>${appointment.service_type}</span>
             </div>
-            ` : ''}
-            ${appointment.patients.phone ? `
+            `
+                : ''
+            }
+            ${
+              appointment.patients.phone
+                ? `
             <div class="detail-row">
               <span class="detail-label">Patient Phone:</span>
               <span>${appointment.patients.phone}</span>
             </div>
-            ` : ''}
+            `
+                : ''
+            }
           </div>
           
           <p>Please review the patient's file before the appointment and prepare accordingly.</p>
@@ -257,43 +292,58 @@ async function sendDoctorReminder(appointment: Appointment) {
 
   try {
     const { data, error } = await resend.emails.send({
-      from: "reminders@dental-clinic.com",
+      from: 'reminders@dental-clinic.com',
       to: appointment.profiles.email,
       subject: `Appointment Reminder - ${appointment.patients.full_name}`,
       html: emailHtml,
     });
 
     if (error) {
-      console.error(`Failed to send doctor reminder for ${appointment.profiles.email}:`, error);
-      await logReminder(appointment.id, 'email', 'doctor', 'failed', error.message);
+      console.error(
+        `Failed to send doctor reminder for ${appointment.profiles.email}:`,
+        error
+      );
+      await logReminder(
+        appointment.id,
+        'email',
+        'doctor',
+        'failed',
+        error.message
+      );
     } else {
       console.log(`Doctor reminder sent to ${appointment.profiles.email}`);
       await logReminder(appointment.id, 'email', 'doctor', 'sent');
     }
   } catch (error) {
     console.error(`Error sending doctor reminder:`, error);
-    await logReminder(appointment.id, 'email', 'doctor', 'failed', error.message);
+    await logReminder(
+      appointment.id,
+      'email',
+      'doctor',
+      'failed',
+      error.message
+    );
   }
 }
 
 async function logReminder(
-  appointmentId: string, 
-  channel: string, 
-  recipientType: string, 
-  status: string, 
+  appointmentId: string,
+  channel: string,
+  recipientType: string,
+  status: string,
   errorMessage?: string
 ) {
   try {
-    await supabase.from("reminder_logs").insert({
+    await supabase.from('reminder_logs').insert({
       appointment_id: appointmentId,
       channel: channel,
       recipient_type: recipientType,
       status: status,
       error_message: errorMessage || null,
-      sent_at: new Date().toISOString()
+      sent_at: new Date().toISOString(),
     });
   } catch (error) {
-    console.error("Failed to log reminder:", error);
+    console.error('Failed to log reminder:', error);
   }
 }
 ```
@@ -312,34 +362,40 @@ supabase functions schedule send-reminders --cron="0 8 * * *"
 
 ```tsx
 // components/admin/ReminderTester.tsx
-'use client'
-import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Mail, Clock, CheckCircle, AlertTriangle } from 'lucide-react'
+'use client';
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Mail, Clock, CheckCircle, AlertTriangle } from 'lucide-react';
 
 export function ReminderTester() {
-  const [testing, setTesting] = useState(false)
-  const [result, setResult] = useState<any>(null)
+  const [testing, setTesting] = useState(false);
+  const [result, setResult] = useState<any>(null);
 
   const testReminders = async () => {
-    setTesting(true)
-    setResult(null)
+    setTesting(true);
+    setResult(null);
 
     try {
       const response = await fetch('/api/admin/test-reminders', {
         method: 'POST',
-      })
-      
-      const data = await response.json()
-      setResult(data)
+      });
+
+      const data = await response.json();
+      setResult(data);
     } catch (error) {
-      setResult({ error: error.message })
+      setResult({ error: error.message });
     } finally {
-      setTesting(false)
+      setTesting(false);
     }
-  }
+  };
 
   return (
     <Card>
@@ -350,11 +406,7 @@ export function ReminderTester() {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <Button 
-          onClick={testReminders} 
-          disabled={testing}
-          className="w-full"
-        >
+        <Button onClick={testReminders} disabled={testing} className="w-full">
           {testing ? 'Testing...' : 'Send Test Reminders'}
         </Button>
 
@@ -375,9 +427,7 @@ export function ReminderTester() {
                 <AlertTriangle className="h-5 w-5 text-red-600" />
                 <div>
                   <p className="font-medium text-red-800">Test Failed</p>
-                  <p className="text-sm text-red-600">
-                    {result.error}
-                  </p>
+                  <p className="text-sm text-red-600">{result.error}</p>
                 </div>
               </div>
             )}
@@ -386,12 +436,19 @@ export function ReminderTester() {
               <div className="space-y-2">
                 <h4 className="font-medium">Details:</h4>
                 {result.details.map((detail: any, index: number) => (
-                  <div key={index} className="flex items-center justify-between p-2 border rounded">
+                  <div
+                    key={index}
+                    className="flex items-center justify-between p-2 border rounded"
+                  >
                     <div className="flex items-center gap-2">
                       <Mail className="h-4 w-4" />
                       <span className="text-sm">{detail.recipient}</span>
                     </div>
-                    <Badge variant={detail.status === 'sent' ? 'default' : 'destructive'}>
+                    <Badge
+                      variant={
+                        detail.status === 'sent' ? 'default' : 'destructive'
+                      }
+                    >
                       {detail.status}
                     </Badge>
                   </div>
@@ -402,7 +459,7 @@ export function ReminderTester() {
         )}
       </CardContent>
     </Card>
-  )
+  );
 }
 ```
 
@@ -410,26 +467,26 @@ export function ReminderTester() {
 
 ```typescript
 // app/api/admin/test-reminders/route.ts
-import { createClient } from '@supabase/supabase-js'
-import { NextResponse } from 'next/server'
+import { createClient } from '@supabase/supabase-js';
+import { NextResponse } from 'next/server';
 
 export async function POST() {
   try {
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.SUPABASE_SERVICE_ROLE_KEY!
-    )
+    );
 
     // Trigger the edge function
-    const { data, error } = await supabase.functions.invoke('send-reminders')
+    const { data, error } = await supabase.functions.invoke('send-reminders');
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 })
+      return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    return NextResponse.json(data)
+    return NextResponse.json(data);
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 ```
@@ -437,24 +494,28 @@ export async function POST() {
 ## Implementation Steps
 
 ### Edge Function Setup
+
 - [ ] Create reminder Edge Function with email templates
 - [ ] Implement patient and doctor reminder logic
 - [ ] Add error handling and logging
 - [ ] Deploy function to Supabase
 
 ### Scheduling & Automation
+
 - [ ] Set up cron schedule for daily execution
 - [ ] Configure timezone handling
 - [ ] Add manual trigger functionality
 - [ ] Implement reminder history tracking
 
 ### Email Templates
+
 - [ ] Design professional email templates
 - [ ] Add clinic branding and contact info
 - [ ] Create responsive HTML emails
 - [ ] Include appointment details and directions
 
 ## Deliverables
+
 - Automated reminder system
 - Professional email templates
 - Error handling and logging
@@ -462,4 +523,5 @@ export async function POST() {
 - Cron-based scheduling
 
 ## Estimated Time
+
 1 day
