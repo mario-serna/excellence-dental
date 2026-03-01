@@ -10,28 +10,37 @@ This file serves as the central entry point for all lessons learned and problem-
 
 ## Topic-Specific Lessons
 
-### [Code Quality & Formatting](./lessons/code-quality.md)
+### [UI Design Implementation](./ui-design-implementation.md)
+
+- Comprehensive UI design system guidelines
+- Responsive design patterns and breakpoints
+- Role-based UI filtering strategies
+- Component conventions and accessibility
+- Design tokens and shadcn/ui integration
+
+### [Code Quality & Formatting](./code-quality.md)
 
 - Prettier configuration and best practices
 - VSCode setup and automation
 - Common formatting issues and solutions
 - Recovery commands and templates
 
-### [Testing Setup & Best Practices](./lessons/testing.md)
+### [Testing Setup & Best Practices](./testing.md)
 
 - Testing infrastructure setup (Vitest, Testing Library)
 - Test organization and configuration
 - Testing strategies and coverage goals
 - Common testing issues and solutions
 
-### [GitHub Workflow & Collaboration](./lessons/github-workflow.md)
+### [GitHub Workflow & Collaboration](./github-workflow.md)
 
 - Branch management and naming conventions
 - Pull request processes and requirements
 - Tool limitations and workarounds
 - Git commands and API examples
+- **Branch creation process** - Always check existence before creating
 
-### [Development Environment Setup](./lessons/development-environment.md)
+### [Development Environment Setup](./development-environment.md)
 
 - Initial project configuration
 - Dependency management
@@ -123,6 +132,7 @@ When encountering new problems or solutions:
 4. **Include Prevention** - How to avoid in the future
 5. **Add Recovery Commands** - Quick fix commands
 6. **Update This Hub** - Reference new lesson if needed
+7. **Verify Correct Location** - Always create lessons in `.windsurf/lessons/` NOT `.windsurf/rules/lessons/`
 
 ### Lesson Template
 

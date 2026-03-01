@@ -42,8 +42,9 @@ For each issue you work on, you must create a new branch following this pattern:
    - **Wait for explicit user approval before proceeding**
 
 1. **Before Starting Work**
-   - Create a new branch using the naming convention above
-   - **Agent must run git commands to create the branch and move to it**
+   - **Check if branch exists locally and remotely** using `git branch -a` and `git ls-remote origin`
+   - If branch exists: checkout existing branch
+   - If branch doesn't exist: create new branch using naming convention
    - Reference the issue number in the branch name
    - **Assign the issue to the user working on it**
    - Ensure the issue is assigned to you
