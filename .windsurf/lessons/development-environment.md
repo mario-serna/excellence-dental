@@ -47,6 +47,15 @@
 - **Solution**: Configure .gitattributes, use consistent settings
 - **Prevention**: Set up proper git configuration early
 
+#### File Naming Inconsistencies
+
+- **Problem**: Mixed naming conventions (PascalCase vs kebab-case)
+- **Solution**: Enforce kebab-case for ALL files, including React components
+- **Prevention**: Use file naming verification in code review checklist
+- **Common Mistakes**:
+  - Wrong: `Sidebar.tsx`, `TopNav.tsx`, `LoginForm.tsx`
+  - Correct: `sidebar.tsx`, `top-nav.tsx`, `login-form.tsx`
+
 ### Environment Setup Checklist
 
 #### Initial Setup
@@ -73,6 +82,77 @@
 - **Zod Validation**: Pre-interpolate messages before passing to zod validation
 - **Translation Keys**: Use dot notation (e.g., `messages.welcome`, `forms.invalidEmail`)
 
+#### File Naming Convention
+
+**Rule**: All files use kebab-case, including React components
+
+```bash
+# React Components (kebab-case filenames)
+components/
+├── ui/
+│   ├── alert.tsx              # exports Alert component
+│   ├── avatar.tsx             # exports Avatar component
+│   ├── button.tsx             # exports Button component
+│   └── password-input.tsx     # exports PasswordInput component
+└── layout/
+    ├── sidebar.tsx            # exports Sidebar component
+    ├── top-nav.tsx            # exports TopNav component
+    └── mobile-nav.tsx         # exports MobileNav component
+
+# Feature Components
+features/
+├── auth/
+│   ├── components/
+│   │   └── login-form.tsx     # exports LoginForm component
+│   └── pages/
+│       └── login-page.tsx     # exports LoginPage component
+```
+
+**Component Export Pattern**:
+
+```tsx
+// sidebar.tsx (kebab-case filename)
+export function Sidebar() {
+  // PascalCase export name
+  return <div>...</div>;
+}
+
+// top-nav.tsx (kebab-case filename)
+export function TopNav() {
+  // PascalCase export name
+  return <div>...</div>;
+}
+```
+
+#### Directory Structure
+
+```bash
+project/
+├── app/[locale]/              # Next.js routing
+├── components/
+│   ├── ui/                    # Reusable UI components
+│   └── layout/                # Layout-specific components
+├── features/                  # Feature-based organization
+│   └── auth/
+│       ├── components/        # Feature components
+│       ├── core/              # Business logic
+│       │   ├── hooks/         # Custom hooks (kebab-case.ts)
+│       │   ├── services/      # Services (kebab-case.service.ts)
+│       │   └── types/         # Types (kebab-case.types.ts)
+│       └── providers/         # Auth providers
+├── lib/                       # Utilities and configurations
+├── locales/                   # i18n files
+└── .windsurf/                 # Project-specific configs
+```
+
+#### Code Organization
+
+- **Feature-based structure**: Group by business feature, not technical layer
+- **Core separation**: Business logic in `core/` directory
+- **Type safety**: All types in dedicated `.types.ts` files
+- **Service pattern**: All services end with `.service.ts`
+- **Hook pattern**: All hooks use `use-` prefix and kebab-case filenames
+
 #### Code Quality Tools
 
 - [ ] Configure Prettier
@@ -80,6 +160,7 @@
 - [ ] Set up VSCode settings
 - [ ] Add format and lint scripts
 - [ ] Test formatting on sample files
+- [ ] Verify file naming conventions follow kebab-case
 
 #### Testing Setup
 
