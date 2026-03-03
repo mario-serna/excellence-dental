@@ -1,6 +1,6 @@
 import { createServerClient } from '@supabase/ssr';
 import { authConfig } from '../../config/auth-config';
-import { IMiddlewareAuthProvider } from '../../core/interfaces/auth-provider.interface';
+import { IMiddlewareAuthProvider } from '../../core/interfaces/middleware-provider.interface';
 
 export class SupabaseMiddlewareProvider implements IMiddlewareAuthProvider {
   createMiddlewareClient(request: Request) {
@@ -25,6 +25,11 @@ export class SupabaseMiddlewareProvider implements IMiddlewareAuthProvider {
   async getSession(request: Request) {
     const supabase = this.createMiddlewareClient(request);
     return supabase.auth.getSession();
+  }
+
+  async getUser(request: Request) {
+    const supabase = this.createMiddlewareClient(request);
+    return supabase.auth.getUser();
   }
 }
 

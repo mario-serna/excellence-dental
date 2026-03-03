@@ -1,20 +1,14 @@
 'use client';
-import { useRouter, usePathname } from 'next/navigation';
-
-export const APP_ROUTES = {
-  login: '/login',
-  dashboard: '/dashboard',
-  admin: '/admin',
-  clinical: '/clinical',
-} as const;
+import { usePathname, useRouter } from 'next/navigation';
+import { APP_ROUTES } from '../routes';
 
 export function useNavigation() {
   const router = useRouter();
   const pathname = usePathname();
-  
+
   // Extract current locale from pathname
   const locale = pathname.split('/')[1] || 'en';
-  
+
   const navigateTo = (path: string) => {
     router.push(`/${locale}${path}`);
   };
