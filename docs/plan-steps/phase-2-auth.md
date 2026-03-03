@@ -7,6 +7,7 @@ Implement authentication system using Supabase with feature-based screaming arch
 ## Architecture Approach
 
 ### Feature-Based Structure
+
 ```
 features/auth/
 ├── core/
@@ -38,6 +39,7 @@ features/auth/
 ```
 
 ### Plugin-Based Design
+
 - Abstract external dependencies behind interfaces
 - Provider swapping via configuration
 - Type-safe role management with object-based constants
@@ -48,20 +50,19 @@ features/auth/
 ### 2.1 Supabase Client Setup
 
 #### Browser Client
+
 ```ts
 // features/auth/providers/supabase/supabase-client.ts
 import { createBrowserClient } from '@supabase/ssr';
 import { supabaseConfig } from './supabase-config';
 
 export const createSupabaseClient = () => {
-  return createBrowserClient(
-    supabaseConfig.url,
-    supabaseConfig.anonKey
-  );
+  return createBrowserClient(supabaseConfig.url, supabaseConfig.anonKey);
 };
 ```
 
 #### Server Client
+
 ```ts
 // features/auth/providers/supabase/supabase-server-client.ts
 import { createServerClient } from '@supabase/ssr';
@@ -70,52 +71,46 @@ import { supabaseConfig } from './supabase-config';
 
 export const createSupabaseServerClient = () => {
   const cookieStore = cookies();
-  return createServerClient(
-    supabaseConfig.url,
-    supabaseConfig.anonKey,
-    {
-      cookies: {
-        getAll: () => cookieStore.getAll(),
-        setAll: (cookiesToSet) => {
-          cookiesToSet.forEach(({ name, value, options }) =>
-            cookieStore.set(name, value, options)
-          );
-        },
+  return createServerClient(supabaseConfig.url, supabaseConfig.anonKey, {
+    cookies: {
+      getAll: () => cookieStore.getAll(),
+      setAll: (cookiesToSet) => {
+        cookiesToSet.forEach(({ name, value, options }) =>
+          cookieStore.set(name, value, options)
+        );
       },
-    }
-  );
+    },
+  });
 };
 ```
 
 #### Middleware Client
+
 ```ts
 // features/auth/providers/supabase/supabase-middleware-client.ts
 import { createServerClient } from '@supabase/ssr';
 import { supabaseConfig } from './supabase-config';
 
 export const createSupabaseMiddlewareClient = (request: Request) => {
-  return createServerClient(
-    supabaseConfig.url,
-    supabaseConfig.anonKey,
-    {
-      cookies: {
-        getAll: () => {
-          const cookieHeader = request.headers.get('Cookie');
-          if (!cookieHeader) return [];
-          return cookieHeader.split(';').map(c => {
-            const [name, ...rest] = c.split('=');
-            return { name: name.trim(), value: rest.join('=').trim() };
-          });
-        },
+  return createServerClient(supabaseConfig.url, supabaseConfig.anonKey, {
+    cookies: {
+      getAll: () => {
+        const cookieHeader = request.headers.get('Cookie');
+        if (!cookieHeader) return [];
+        return cookieHeader.split(';').map((c) => {
+          const [name, ...rest] = c.split('=');
+          return { name: name.trim(), value: rest.join('=').trim() };
+        });
       },
-    }
-  );
+    },
+  });
 };
 ```
 
 ### 2.2 Core Interfaces
 
 #### Auth Provider Interface
+
 ```ts
 // features/auth/core/interfaces/auth-provider.interface.ts
 export interface IAuthProvider {
@@ -134,6 +129,7 @@ export interface AuthResult {
 ```
 
 #### User Interface
+
 ```ts
 // features/auth/core/interfaces/user.interface.ts
 export interface User {
@@ -147,6 +143,7 @@ export interface User {
 ### 2.3 Type-Safe Role Management
 
 #### Role Definitions
+
 ```ts
 // features/auth/core/types/role.types.ts
 export const USER_ROLES = {
@@ -155,8 +152,8 @@ export const USER_ROLES = {
   assistant: 'assistant',
 } as const;
 
-export type UserRole = typeof USER_ROLES[keyof typeof USER_ROLES];
-export type RoleValue = typeof USER_ROLES[UserRole];
+export type UserRole = (typeof USER_ROLES)[keyof typeof USER_ROLES];
+export type RoleValue = (typeof USER_ROLES)[UserRole];
 
 // Role hierarchy for permission checking
 export const ROLE_HIERARCHY = {
@@ -174,19 +171,31 @@ export const ROLE_GROUPS = {
 ```
 
 #### Role Utilities
+
 ```ts
 // features/auth/core/utils/role-utils.ts
-import { USER_ROLES, ROLE_HIERARCHY, ROLE_GROUPS, type UserRole } from '../types/role.types';
+import {
+  USER_ROLES,
+  ROLE_HIERARCHY,
+  ROLE_GROUPS,
+  type UserRole,
+} from '../types/role.types';
 
 export function isValidRole(role: string): role is UserRole {
   return Object.values(USER_ROLES).includes(role as UserRole);
 }
 
-export function hasHigherRole(userRole: UserRole, requiredRole: UserRole): boolean {
+export function hasHigherRole(
+  userRole: UserRole,
+  requiredRole: UserRole
+): boolean {
   return ROLE_HIERARCHY[userRole] >= ROLE_HIERARCHY[requiredRole];
 }
 
-export function isInRoleGroup(userRole: UserRole, group: keyof typeof ROLE_GROUPS): boolean {
+export function isInRoleGroup(
+  userRole: UserRole,
+  group: keyof typeof ROLE_GROUPS
+): boolean {
   return ROLE_GROUPS[group].includes(userRole);
 }
 ```
@@ -195,7 +204,11 @@ export function isInRoleGroup(userRole: UserRole, group: keyof typeof ROLE_GROUP
 
 ```ts
 // features/auth/providers/supabase/supabase-auth-provider.ts
-import { IAuthProvider, AuthResult, User } from '../../core/interfaces/auth-provider.interface';
+import {
+  IAuthProvider,
+  AuthResult,
+  User,
+} from '../../core/interfaces/auth-provider.interface';
 import { createSupabaseClient } from './supabase-client';
 import { USER_ROLES, type UserRole } from '../../core/types/role.types';
 
@@ -213,13 +226,13 @@ export class SupabaseAuthProvider implements IAuthProvider {
         return { success: false, error: error.message };
       }
 
-      return { 
-        success: true, 
+      return {
+        success: true,
         user: {
           id: data.user.id,
           email: data.user.email!,
           role: data.user.user_metadata?.role as UserRole,
-        }
+        },
       };
     } catch (err) {
       return { success: false, error: 'Authentication failed' };
@@ -231,7 +244,9 @@ export class SupabaseAuthProvider implements IAuthProvider {
   }
 
   async getCurrentUser(): Promise<User | null> {
-    const { data: { user } } = await this.client.auth.getUser();
+    const {
+      data: { user },
+    } = await this.client.auth.getUser();
     if (!user) return null;
 
     return {
@@ -242,20 +257,20 @@ export class SupabaseAuthProvider implements IAuthProvider {
   }
 
   onAuthStateChange(callback: (user: User | null) => void): () => void {
-    const { data: { subscription } } = this.client.auth.onAuthStateChange(
-      (_event, session) => {
-        if (!session?.user) {
-          callback(null);
-          return;
-        }
-
-        callback({
-          id: session.user.id,
-          email: session.user.email!,
-          role: session.user.user_metadata?.role as UserRole,
-        });
+    const {
+      data: { subscription },
+    } = this.client.auth.onAuthStateChange((_event, session) => {
+      if (!session?.user) {
+        callback(null);
+        return;
       }
-    );
+
+      callback({
+        id: session.user.id,
+        email: session.user.email!,
+        role: session.user.user_metadata?.role as UserRole,
+      });
+    });
 
     return () => subscription.unsubscribe();
   }
@@ -317,6 +332,7 @@ export const authService = new AuthService();
 ### 2.6 Authentication Hooks
 
 #### Use Auth Hook
+
 ```ts
 // features/auth/core/hooks/use-auth.ts
 'use client';
@@ -347,16 +363,16 @@ export function useAuth() {
   const signIn = async (email: string, password: string) => {
     setLoading(true);
     setError(null);
-    
+
     const result = await authService.signIn(email, password);
-    
+
     if (result.success) {
       setUser(result.user!);
       window.location.href = '/dashboard';
     } else {
       setError(result.error || 'Login failed');
     }
-    
+
     setLoading(false);
   };
 
@@ -371,11 +387,17 @@ export function useAuth() {
 ```
 
 #### Use Role Hook
+
 ```ts
 // features/auth/core/hooks/use-role.ts
 'use client';
 import { useAuth } from './use-auth';
-import { USER_ROLES, type UserRole, hasHigherRole, isInRoleGroup } from '../types/role.types';
+import {
+  USER_ROLES,
+  type UserRole,
+  hasHigherRole,
+  isInRoleGroup,
+} from '../types/role.types';
 
 export function useRole() {
   const { user } = useAuth();
@@ -386,10 +408,12 @@ export function useRole() {
     isAdmin: role === USER_ROLES.admin,
     isDoctor: role === USER_ROLES.doctor,
     isAssistant: role === USER_ROLES.assistant,
-    
+
     // Enhanced role checking
-    hasAccess: (requiredRole: UserRole) => role ? hasHigherRole(role, requiredRole) : false,
-    isInGroup: (group: 'clinical' | 'administrative' | 'all') => role ? isInRoleGroup(role, group) : false,
+    hasAccess: (requiredRole: UserRole) =>
+      role ? hasHigherRole(role, requiredRole) : false,
+    isInGroup: (group: 'clinical' | 'administrative' | 'all') =>
+      role ? isInRoleGroup(role, group) : false,
     canAccessClinical: role ? isInRoleGroup(role, 'clinical') : false,
     canAccessAdmin: role === USER_ROLES.admin,
   };
@@ -399,6 +423,7 @@ export function useRole() {
 ### 2.7 Authentication Components
 
 #### Login Form
+
 ```tsx
 // features/auth/components/login-form.tsx
 'use client';
@@ -480,6 +505,7 @@ export function LoginForm() {
 ```
 
 #### Role Guard Component
+
 ```tsx
 // features/auth/components/role-guard.tsx
 'use client';
@@ -494,7 +520,12 @@ interface RoleGuardProps {
   fallback?: React.ReactNode;
 }
 
-export function RoleGuard({ children, allowedRoles, requireAll = false, fallback }: RoleGuardProps) {
+export function RoleGuard({
+  children,
+  allowedRoles,
+  requireAll = false,
+  fallback,
+}: RoleGuardProps) {
   const { role, hasAccess } = useRole();
 
   if (!role) {
@@ -502,16 +533,18 @@ export function RoleGuard({ children, allowedRoles, requireAll = false, fallback
   }
 
   const hasPermission = requireAll
-    ? allowedRoles.every(r => hasAccess(r))
-    : allowedRoles.some(r => hasAccess(r));
+    ? allowedRoles.every((r) => hasAccess(r))
+    : allowedRoles.some((r) => hasAccess(r));
 
   if (!hasPermission) {
-    return fallback || (
-      <Alert variant="destructive">
-        <AlertDescription>
-          You don't have permission to access this page.
-        </AlertDescription>
-      </Alert>
+    return (
+      fallback || (
+        <Alert variant="destructive">
+          <AlertDescription>
+            You don't have permission to access this page.
+          </AlertDescription>
+        </Alert>
+      )
     );
   }
 
@@ -519,7 +552,13 @@ export function RoleGuard({ children, allowedRoles, requireAll = false, fallback
 }
 
 // Convenience components
-export function AdminGuard({ children, fallback }: { children: React.ReactNode; fallback?: React.ReactNode }) {
+export function AdminGuard({
+  children,
+  fallback,
+}: {
+  children: React.ReactNode;
+  fallback?: React.ReactNode;
+}) {
   return (
     <RoleGuard allowedRoles={[USER_ROLES.admin]} fallback={fallback}>
       {children}
@@ -527,10 +566,16 @@ export function AdminGuard({ children, fallback }: { children: React.ReactNode; 
   );
 }
 
-export function ClinicalGuard({ children, fallback }: { children: React.ReactNode; fallback?: React.ReactNode }) {
+export function ClinicalGuard({
+  children,
+  fallback,
+}: {
+  children: React.ReactNode;
+  fallback?: React.ReactNode;
+}) {
   return (
-    <RoleGuard 
-      allowedRoles={[USER_ROLES.doctor, USER_ROLES.assistant]} 
+    <RoleGuard
+      allowedRoles={[USER_ROLES.doctor, USER_ROLES.assistant]}
       fallback={fallback}
     >
       {children}
@@ -542,11 +587,18 @@ export function ClinicalGuard({ children, fallback }: { children: React.ReactNod
 ### 2.8 Authentication Pages
 
 #### Login Page
+
 ```tsx
 // features/auth/pages/login-page.tsx
 'use client';
 import { LoginForm } from '../components/login-form';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 
 export function LoginPage() {
   return (
@@ -572,7 +624,10 @@ export function LoginPage() {
 ```ts
 // middleware.ts
 import { createMiddlewareClient } from '@/features/auth/providers/supabase/supabase-middleware-client';
-import { USER_ROLES, type UserRole } from '@/features/auth/core/types/role.types';
+import {
+  USER_ROLES,
+  type UserRole,
+} from '@/features/auth/core/types/role.types';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function middleware(request: NextRequest) {
@@ -590,13 +645,19 @@ export async function middleware(request: NextRequest) {
   }
 
   // Role-based route protection
-  if (request.nextUrl.pathname.startsWith('/admin') && userRole !== USER_ROLES.admin) {
+  if (
+    request.nextUrl.pathname.startsWith('/admin') &&
+    userRole !== USER_ROLES.admin
+  ) {
     return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 
   // Clinical routes protection
-  if (request.nextUrl.pathname.startsWith('/clinical') && userRole && 
-      ![USER_ROLES.doctor, USER_ROLES.assistant].includes(userRole)) {
+  if (
+    request.nextUrl.pathname.startsWith('/clinical') &&
+    userRole &&
+    ![USER_ROLES.doctor, USER_ROLES.assistant].includes(userRole)
+  ) {
     return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 

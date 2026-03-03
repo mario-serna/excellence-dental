@@ -3,23 +3,46 @@
 ## Key Lessons Learned
 
 ### Environment Configuration
+
 - **Set up all tooling upfront** - Prevents workflow interruptions
 - **Use consistent configurations** - Ensures team collaboration works smoothly
 - **Document setup processes** - Enables quick onboarding and recovery
+- **Have alternative testing approaches** - MCP tools may fail unexpectedly
+
+### MCP Testing Strategies
+
+#### **When MCP Tools Fail**
+
+##### **Common Issues**
+
+- **Fill Tool Errors**: `Invalid arguments for tool fill` with numeric UIDs
+- **Transport Errors**: `transport closed` or connection issues
+- **Type Validation**: String/number type mismatches
+
+#### **Best Practices for MCP Testing**
+
+1. **Always Have Alternatives**: Keep JavaScript evaluation ready
+2. **Test Multiple Ways**: Try fill, then evaluate_script, then direct navigation
+3. **Handle Race Conditions**: Use waitFor when expecting page changes
+4. **Verify Results**: Take snapshots after actions to confirm success
+5. **Debug Systematically**: Check console logs and network requests
 
 ### Common Issues & Solutions
 
 #### Dependency Management
+
 - **Problem**: Missing dev dependencies for tooling
 - **Solution**: Install all required packages upfront
 - **Prevention**: Check package.json completeness, use lock files
 
 #### Configuration File Conflicts
+
 - **Problem**: Multiple configuration files overriding each other
 - **Solution**: Understand configuration precedence, document settings
 - **Prevention**: Create configuration documentation, use consistent naming
 
 #### Line Ending Issues
+
 - **Problem**: LF/CRLF conversion warnings in git
 - **Solution**: Configure .gitattributes, use consistent settings
 - **Prevention**: Set up proper git configuration early
@@ -27,13 +50,31 @@
 ### Environment Setup Checklist
 
 #### Initial Setup
+
 - [ ] Install package manager (bun/npm/yarn)
 - [ ] Initialize project with proper package.json
 - [ ] Configure git repository
 - [ ] Set up .gitignore
 - [ ] Install development dependencies
 
+#### Internationalization (i18n) Setup
+
+- [ ] Configure next-intl plugin
+- [ ] Set up locale routing structure (`app/[locale]`)
+- [ ] Create locale JSON files for all supported languages
+- [ ] Configure middleware for locale detection
+- [ ] Test locale switching functionality
+
+#### i18n Best Practices
+
+- **Interpolation Syntax**: Use single braces `{variable}` not double braces `{{variable}}`
+  - Correct: `t('forms.minLength', { count: 6 })` → "Minimum {count} characters"
+  - Wrong: `t('forms.minLength', { count: 6 })` → "Minimum {{count}} characters"
+- **Zod Validation**: Pre-interpolate messages before passing to zod validation
+- **Translation Keys**: Use dot notation (e.g., `messages.welcome`, `forms.invalidEmail`)
+
 #### Code Quality Tools
+
 - [ ] Configure Prettier
 - [ ] Configure ESLint
 - [ ] Set up VSCode settings
@@ -41,6 +82,7 @@
 - [ ] Test formatting on sample files
 
 #### Testing Setup
+
 - [ ] Install testing framework (Vitest)
 - [ ] Configure test environment
 - [ ] Add test scripts
@@ -48,6 +90,7 @@
 - [ ] Set up coverage reporting
 
 #### Git Configuration
+
 ```bash
 # Set up user identity
 git config --global user.name "Your Name"
@@ -62,6 +105,7 @@ git config --global init.defaultBranch main
 ```
 
 #### .gitignore Template
+
 ```gitignore
 # Dependencies
 node_modules/
@@ -114,6 +158,7 @@ Thumbs.db
 ### Package.json Scripts Template
 
 #### Development Scripts
+
 ```json
 {
   "scripts": {
@@ -138,6 +183,7 @@ Thumbs.db
 ### Recovery Commands
 
 #### Dependency Issues
+
 ```bash
 # Clear package manager cache
 bun pm cache clean
@@ -154,6 +200,7 @@ bun outdated
 ```
 
 #### Git Issues
+
 ```bash
 # Reset to clean state
 git reset --hard HEAD
@@ -168,6 +215,7 @@ git checkout -b recovery <commit-hash>
 ```
 
 #### Configuration Issues
+
 ```bash
 # Reset VSCode settings
 code --reset-settings
@@ -183,6 +231,7 @@ git config --global --unset-all user.email
 ### Environment Variables Template
 
 #### .env.example
+
 ```env
 # Database
 DATABASE_URL="postgresql://user:password@localhost:5432/dbname"
@@ -203,6 +252,7 @@ PORT="3000"
 ### Docker Setup (Optional)
 
 #### Dockerfile
+
 ```dockerfile
 FROM node:18-alpine
 
@@ -221,18 +271,19 @@ CMD ["bun", "start"]
 ```
 
 #### docker-compose.yml
+
 ```yaml
 version: '3.8'
 services:
   app:
     build: .
     ports:
-      - "3000:3000"
+      - '3000:3000'
     environment:
       - NODE_ENV=production
     depends_on:
       - db
-  
+
   db:
     image: postgres:15
     environment:
@@ -247,6 +298,7 @@ volumes:
 ```
 
 ## Memory Triggers
+
 - When setting up new projects
 - When environment tools fail
 - During onboarding process

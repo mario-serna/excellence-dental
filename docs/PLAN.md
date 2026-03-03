@@ -22,18 +22,18 @@ This document provides the main overview and entry point to the detailed impleme
 
 ## Tech Stack
 
-| Layer         | Technology                                           |
-| ------------- | ---------------------------------------------------- |
-| Framework     | Next.js 16 (App Router)                              |
-| Backend / DB  | Supabase (Auth, PostgreSQL, Storage, Edge Functions) |
-| UI Components | shadcn/ui                                            |
-| Styling       | Tailwind CSS                                         |
-| Language      | TypeScript                                           |
-| Email         | Resend                                               |
-| Forms         | React Hook Form + Zod                                |
-| State         | Zustand (lightweight, POC-friendly)                  |
-| i18n          | next-intl (Spanish default)                          |
-| Architecture   | Feature-based screaming architecture with plugin design      |
+| Layer         | Technology                                              |
+| ------------- | ------------------------------------------------------- |
+| Framework     | Next.js 16 (App Router)                                 |
+| Backend / DB  | Supabase (Auth, PostgreSQL, Storage, Edge Functions)    |
+| UI Components | shadcn/ui                                               |
+| Styling       | Tailwind CSS                                            |
+| Language      | TypeScript                                              |
+| Email         | Resend                                                  |
+| Forms         | React Hook Form + Zod                                   |
+| State         | Zustand (lightweight, POC-friendly)                     |
+| i18n          | next-intl (Spanish default)                             |
+| Architecture  | Feature-based screaming architecture with plugin design |
 
 ---
 
@@ -79,16 +79,16 @@ This document provides the main overview and entry point to the detailed impleme
 
 ## 🗓️ Estimated POC Timeline
 
-| Phase            | Work                          | Est. Time    |
-| ---------------- | ----------------------------- | ------------ |
+| Phase            | Work                                                 | Est. Time    |
+| ---------------- | ---------------------------------------------------- | ------------ |
 | 0 — Setup        | Project scaffold, shadcn, env, architecture patterns | 0.5 day      |
-| 1 — Database     | Migrations, RLS, triggers     | 1 day        |
-| 2 — Auth         | Login, middleware, role hook, plugin architecture | 1 day        |
-| 3 — Layout       | Sidebar, nav shell            | 0.5 day      |
-| 4 — Dashboard    | Stats cards, upcoming table   | 1 day        |
-| 5 — Patients     | List, profile, records        | 2 days       |
-| 6 — Appointments | List, booking, conflict check | 2 days       |
-| 7 — Reminders    | Edge function, email          | 1 day        |
-| 8 — User Mgmt    | Admin user CRUD               | 1 day        |
-| 9 — Polish       | Skeletons, toasts, seed data  | 1 day        |
-| **Total**        |                               | **~11 days** |
+| 1 — Database     | Migrations, RLS, triggers                            | 1 day        |
+| 2 — Auth         | Login, middleware, role hook, plugin architecture    | 1 day        |
+| 3 — Layout       | Sidebar, nav shell                                   | 0.5 day      |
+| 4 — Dashboard    | Stats cards, upcoming table                          | 1 day        |
+| 5 — Patients     | List, profile, records                               | 2 days       |
+| 6 — Appointments | List, booking, conflict check                        | 2 days       |
+| 7 — Reminders    | Edge function, email                                 | 1 day        |
+| 8 — User Mgmt    | Admin user CRUD                                      | 1 day        |
+| 9 — Polish       | Skeletons, toasts, seed data                         | 1 day        |
+| **Total**        |                                                      | **~11 days** |
