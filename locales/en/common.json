@@ -29,7 +29,8 @@
     "paste": "Paste",
     "cut": "Cut",
     "undo": "Undo",
-    "redo": "Redo"
+    "redo": "Redo",
+    "previous": "Previous"
   },
   "auth": {
     "login": "Login",
@@ -37,13 +38,27 @@
     "email": "Email",
     "password": "Password",
     "loginButton": "Sign In",
-    "forgotPassword": "Forgot Password?",
-    "rememberMe": "Remember Me",
-    "createAccount": "Create Account",
+    "signingIn": "Signing in...",
+    "emailPlaceholder": "email@example.com",
+    "passwordPlaceholder": "••••••••",
+    "forgotPassword": "Forgot password?",
+    "rememberMe": "Remember me",
+    "createAccount": "Create account",
     "alreadyHaveAccount": "Already have an account?",
     "invalidCredentials": "Invalid credentials",
     "loginSuccess": "Login successful",
-    "loginError": "Login failed"
+    "loginError": "Login failed",
+    "loginErrorTitle": "Authentication Error",
+    "loginDescription": "Access your account",
+    "signIn": "Sign In",
+    "roles": {
+      "admin": "Administrator",
+      "doctor": "Doctor",
+      "assistant": "Assistant",
+      "unknown": "Unknown"
+    },
+    "pleaseLogin": "Please sign in to continue",
+    "noPermission": "You don't have permission to access this page"
   },
   "navigation": {
     "dashboard": "Dashboard",
@@ -113,11 +128,11 @@
   "forms": {
     "required": "This field is required",
     "invalidEmail": "Invalid email address",
-    "minLength": "Minimum {{count}} characters",
-    "maxLength": "Maximum {{count}} characters",
+    "minLength": "Minimum {count} characters",
+    "maxLength": "Maximum {count} characters",
     "passwordMismatch": "Passwords do not match",
     "selectOption": "Select an option",
-    "uploadFile": "Upload File",
+    "uploadFile": "Upload file",
     "dragDrop": "Drag and drop files here",
     "conflictDetected": "Conflict detected",
     "noConflicts": "No conflicts",

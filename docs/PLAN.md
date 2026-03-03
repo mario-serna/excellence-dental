@@ -8,8 +8,8 @@ This document provides the main overview and entry point to the detailed impleme
 
 | Phase            | File                                                            | Est. Time    | Status |
 | ---------------- | --------------------------------------------------------------- | ------------ | ------ |
-| 0 — Setup        | [phase-0-setup.md](./plan-steps/phase-0-setup.md)               | 0.5 day      | ⏳     |
-| 1 — Database     | [phase-1-database.md](./plan-steps/phase-1-database.md)         | 1 day        | ⏳     |
+| 0 — Setup        | [phase-0-setup.md](./plan-steps/phase-0-setup.md)               | 0.5 day      | ✅     |
+| 1 — Database     | [phase-1-database.md](./plan-steps/phase-1-database.md)         | 1 day        | ✅     |
 | 2 — Auth         | [phase-2-auth.md](./plan-steps/phase-2-auth.md)                 | 1 day        | ⏳     |
 | 3 — Layout       | [phase-3-layout.md](./plan-steps/phase-3-layout.md)             | 0.5 day      | ⏳     |
 | 4 — Dashboard    | [phase-4-dashboard.md](./plan-steps/phase-4-dashboard.md)       | 1 day        | ⏳     |
@@ -22,17 +22,18 @@ This document provides the main overview and entry point to the detailed impleme
 
 ## Tech Stack
 
-| Layer         | Technology                                           |
-| ------------- | ---------------------------------------------------- |
-| Framework     | Next.js 14 (App Router)                              |
-| Backend / DB  | Supabase (Auth, PostgreSQL, Storage, Edge Functions) |
-| UI Components | shadcn/ui                                            |
-| Styling       | Tailwind CSS                                         |
-| Language      | TypeScript                                           |
-| Email         | Resend                                               |
-| Forms         | React Hook Form + Zod                                |
-| State         | Zustand (lightweight, POC-friendly)                  |
-| i18n          | next-intl (Spanish default)                          |
+| Layer         | Technology                                              |
+| ------------- | ------------------------------------------------------- |
+| Framework     | Next.js 16 (App Router)                                 |
+| Backend / DB  | Supabase (Auth, PostgreSQL, Storage, Edge Functions)    |
+| UI Components | shadcn/ui                                               |
+| Styling       | Tailwind CSS                                            |
+| Language      | TypeScript                                              |
+| Email         | Resend                                                  |
+| Forms         | React Hook Form + Zod                                   |
+| State         | Zustand (lightweight, POC-friendly)                     |
+| i18n          | next-intl (Spanish default)                             |
+| Architecture  | Feature-based screaming architecture with plugin design |
 
 ---
 
@@ -53,23 +54,23 @@ This document provides the main overview and entry point to the detailed impleme
 ```json
 {
   "dependencies": {
-    "next": "^14",
-    "react": "^18",
+    "next": "^16",
+    "react": "^19",
     "typescript": "^5",
-    "tailwindcss": "^3",
+    "tailwindcss": "^4",
     "@supabase/supabase-js": "^2",
-    "@supabase/ssr": "^0.1",
+    "@supabase/ssr": "^0.8",
     "react-hook-form": "^7",
-    "@hookform/resolvers": "^3",
-    "zod": "^3",
-    "zustand": "^4",
-    "resend": "^2",
-    "date-fns": "^3",
-    "next-intl": "^3",
-    "lucide-react": "^0.400",
+    "@hookform/resolvers": "^5",
+    "zod": "^4",
+    "zustand": "^5",
+    "resend": "^3",
+    "date-fns": "^4",
+    "next-intl": "^4",
+    "lucide-react": "^0.575",
     "class-variance-authority": "^0.7",
     "clsx": "^2",
-    "tailwind-merge": "^2"
+    "tailwind-merge": "^3"
   }
 }
 ```
@@ -78,16 +79,16 @@ This document provides the main overview and entry point to the detailed impleme
 
 ## 🗓️ Estimated POC Timeline
 
-| Phase            | Work                          | Est. Time    |
-| ---------------- | ----------------------------- | ------------ |
-| 0 — Setup        | Project scaffold, shadcn, env | 0.5 day      |
-| 1 — Database     | Migrations, RLS, triggers     | 1 day        |
-| 2 — Auth         | Login, middleware, role hook  | 1 day        |
-| 3 — Layout       | Sidebar, nav shell            | 0.5 day      |
-| 4 — Dashboard    | Stats cards, upcoming table   | 1 day        |
-| 5 — Patients     | List, profile, records        | 2 days       |
-| 6 — Appointments | List, booking, conflict check | 2 days       |
-| 7 — Reminders    | Edge function, email          | 1 day        |
-| 8 — User Mgmt    | Admin user CRUD               | 1 day        |
-| 9 — Polish       | Skeletons, toasts, seed data  | 1 day        |
-| **Total**        |                               | **~11 days** |
+| Phase            | Work                                                 | Est. Time    |
+| ---------------- | ---------------------------------------------------- | ------------ |
+| 0 — Setup        | Project scaffold, shadcn, env, architecture patterns | 0.5 day      |
+| 1 — Database     | Migrations, RLS, triggers                            | 1 day        |
+| 2 — Auth         | Login, middleware, role hook, plugin architecture    | 1 day        |
+| 3 — Layout       | Sidebar, nav shell                                   | 0.5 day      |
+| 4 — Dashboard    | Stats cards, upcoming table                          | 1 day        |
+| 5 — Patients     | List, profile, records                               | 2 days       |
+| 6 — Appointments | List, booking, conflict check                        | 2 days       |
+| 7 — Reminders    | Edge function, email                                 | 1 day        |
+| 8 — User Mgmt    | Admin user CRUD                                      | 1 day        |
+| 9 — Polish       | Skeletons, toasts, seed data                         | 1 day        |
+| **Total**        |                                                      | **~11 days** |

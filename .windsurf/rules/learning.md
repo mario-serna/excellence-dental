@@ -47,6 +47,13 @@ This file serves as the central entry point for all lessons learned and problem-
 - Git configuration and .gitignore
 - Recovery commands and Docker setup
 
+### [Architecture Patterns](../lessons/architecture-patterns.md)
+
+- Feature-based screaming architecture
+- Plugin-based dependency decoupling
+- Type-safe role management
+- Next.js app router integration
+
 ## Quick Reference
 
 ### Immediate Actions for Common Issues
@@ -63,11 +70,12 @@ This file serves as the central entry point for all lessons learned and problem-
 2. **Large Commits**: Group related files, plan structure
 3. **Line Endings**: Configure .gitattributes early
 
-#### Development Issues
+#### Architecture Issues
 
-1. **Missing Dependencies**: Install all required packages upfront
-2. **Configuration Conflicts**: Understand precedence, document settings
-3. **Testing Failures**: Verify setup with basic test
+1. **Tight Coupling**: Abstract external dependencies behind interfaces
+2. **Poor Organization**: Use feature-based structure over technical layers
+3. **String-Based Types**: Prefer object-based constants for type safety
+4. **Routing Confusion**: Separate Next.js routes from feature components
 
 ### Essential Recovery Commands
 
@@ -95,6 +103,7 @@ git status --porcelain
 - [ ] Tests passing: `bun run test`
 - [ ] Git status clean: `git status`
 - [ ] Configuration valid: Check JSON syntax
+- [ ] Architecture patterns: Follow feature-based structure with plugin design
 
 ## When to Use This Hub
 
@@ -198,6 +207,9 @@ command2
 - Inconsistent code formatting
 - Missing test coverage
 - Environment setup failures
+- Tightly coupled external dependencies
+- String-based type definitions
+- Mixed routing and business logic concerns
 
 ### Prevention Opportunities
 
@@ -206,6 +218,9 @@ command2
 - Document decision rationales
 - Implement automated checks
 - Regular knowledge sharing sessions
+- Design interfaces before implementing providers
+- Use feature-based organization consistently
+- Prefer object-based constants over string literals
 
 ### When to Study
 
