@@ -1,5 +1,6 @@
 ---
 trigger: always_on
+description: This file serves as the central entry point for all lessons learned and problem-solving strategies.
 ---
 
 # Learning & Problem-Solving Hub
@@ -105,31 +106,36 @@ git status --porcelain
 - [ ] Configuration valid: Check JSON syntax
 - [ ] Architecture patterns: Follow feature-based structure with plugin design
 
-## When to Use This Hub
+## When to Study This Hub
 
 ### Before Starting Work
 
-- Check topic-specific lessons for setup guidance
-- Verify environment configuration
-- Review best practices checklists
+- **MANDATORY**: Check topic-specific lessons for setup guidance
+- **MANDATORY**: Review implementation checklist
+- **MANDATORY**: Verify environment configuration
+- **MANDATORY**: Review best practices checklists
+- **MANDATORY**: Read my-mistakes.md to avoid repeating errors
 
 ### When Encountering Problems
 
 - Search relevant topic-specific lesson
 - Try recovery commands
 - Document new solutions
+- Check if mistake is already in my-mistakes.md
 
 ### During Onboarding
 
 - Read all topic-specific lessons
 - Set up environment according to templates
 - Understand workflow processes
+- Memorize implementation checklist
 
 ### Regular Maintenance
 
 - Review lessons monthly for updates
 - Add new solutions as discovered
 - Share with team members
+- Update my-mistakes.md when I repeat errors
 
 ## Adding New Lessons
 
