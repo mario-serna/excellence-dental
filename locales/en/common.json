@@ -30,7 +30,9 @@
     "cut": "Cut",
     "undo": "Undo",
     "redo": "Redo",
-    "previous": "Previous"
+    "previous": "Previous",
+    "appName": "Excellence Dental Clinic",
+    "appDescription": "Management System"
   },
   "auth": {
     "login": "Login",
@@ -58,7 +60,8 @@
       "unknown": "Unknown"
     },
     "pleaseLogin": "Please sign in to continue",
-    "noPermission": "You don't have permission to access this page"
+    "noPermission": "You don't have permission to access this page",
+    "signOut": "Sign Out"
   },
   "navigation": {
     "dashboard": "Dashboard",
@@ -152,5 +155,20 @@
     "sessionExpired": "Your session has expired",
     "welcome": "Welcome to Excellence Dental",
     "description": "Your trusted dental care provider"
+  },
+  "dashboard": {
+    "welcome": "Welcome to the Excellence Dental Management System",
+    "recentActivity": "Recent Activity",
+    "noRecentActivity": "No recent activity",
+    "metrics": {
+      "totalPatients": "Total Patients",
+      "activePatients": "Active patients",
+      "todaysAppointments": "Today's Appointments",
+      "scheduledToday": "Scheduled today",
+      "pendingTasks": "Pending Tasks",
+      "toBeCompleted": "To be completed",
+      "revenueThisMonth": "Revenue This Month",
+      "totalCollected": "Total collected"
+    }
   }
 }

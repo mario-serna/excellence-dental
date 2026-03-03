@@ -1,5 +1,6 @@
 ---
 trigger: always_on
+description: This file serves as the central entry point for all lessons learned and problem-solving strategies.
 ---
 
 # Learning & Problem-Solving Hub
@@ -10,7 +11,7 @@ This file serves as the central entry point for all lessons learned and problem-
 
 ## Topic-Specific Lessons
 
-### [UI Design Implementation](./ui-design-implementation.md)
+### [UI Design Implementation](../lessons/ui-design-implementation.md)
 
 - Comprehensive UI design system guidelines
 - Responsive design patterns and breakpoints
@@ -18,21 +19,21 @@ This file serves as the central entry point for all lessons learned and problem-
 - Component conventions and accessibility
 - Design tokens and shadcn/ui integration
 
-### [Code Quality & Formatting](./code-quality.md)
+### [Code Quality & Formatting](../lessons/code-quality.md)
 
 - Prettier configuration and best practices
 - VSCode setup and automation
 - Common formatting issues and solutions
 - Recovery commands and templates
 
-### [Testing Setup & Best Practices](./testing.md)
+### [Testing Setup & Best Practices](../lessons/testing.md)
 
 - Testing infrastructure setup (Vitest, Testing Library)
 - Test organization and configuration
 - Testing strategies and coverage goals
 - Common testing issues and solutions
 
-### [GitHub Workflow & Collaboration](./github-workflow.md)
+### [GitHub Workflow & Collaboration](../lessons/github-workflow.md)
 
 - Branch management and naming conventions
 - Pull request processes and requirements
@@ -40,7 +41,7 @@ This file serves as the central entry point for all lessons learned and problem-
 - Git commands and API examples
 - **Branch creation process** - Always check existence before creating
 
-### [Development Environment Setup](./development-environment.md)
+### [Development Environment Setup](../lessons/development-environment.md)
 
 - Initial project configuration
 - Dependency management
@@ -105,31 +106,36 @@ git status --porcelain
 - [ ] Configuration valid: Check JSON syntax
 - [ ] Architecture patterns: Follow feature-based structure with plugin design
 
-## When to Use This Hub
+## When to Study This Hub
 
 ### Before Starting Work
 
-- Check topic-specific lessons for setup guidance
-- Verify environment configuration
-- Review best practices checklists
+- **MANDATORY**: Check topic-specific lessons for setup guidance
+- **MANDATORY**: Review implementation checklist
+- **MANDATORY**: Verify environment configuration
+- **MANDATORY**: Review best practices checklists
+- **MANDATORY**: Read my-mistakes.md to avoid repeating errors
 
 ### When Encountering Problems
 
 - Search relevant topic-specific lesson
 - Try recovery commands
 - Document new solutions
+- Check if mistake is already in my-mistakes.md
 
 ### During Onboarding
 
 - Read all topic-specific lessons
 - Set up environment according to templates
 - Understand workflow processes
+- Memorize implementation checklist
 
 ### Regular Maintenance
 
 - Review lessons monthly for updates
 - Add new solutions as discovered
 - Share with team members
+- Update my-mistakes.md when I repeat errors
 
 ## Adding New Lessons
 

@@ -1,10 +1,10 @@
 import {
-  IAuthProvider,
   AuthResult,
+  IAuthProvider,
   User,
 } from '../../core/interfaces/auth-provider.interface';
+import { type UserRole } from '../../core/types/role.types';
 import { createSupabaseClient } from './supabase-client';
-import { USER_ROLES, type UserRole } from '../../core/types/role.types';
 
 export class SupabaseAuthProvider implements IAuthProvider {
   private client = createSupabaseClient();

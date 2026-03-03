@@ -10,7 +10,7 @@ This document provides the main overview and entry point to the detailed impleme
 | ---------------- | --------------------------------------------------------------- | ------------ | ------ |
 | 0 — Setup        | [phase-0-setup.md](./plan-steps/phase-0-setup.md)               | 0.5 day      | ✅     |
 | 1 — Database     | [phase-1-database.md](./plan-steps/phase-1-database.md)         | 1 day        | ✅     |
-| 2 — Auth         | [phase-2-auth.md](./plan-steps/phase-2-auth.md)                 | 1 day        | ⏳     |
+| 2 — Auth         | [phase-2-auth.md](./plan-steps/phase-2-auth.md)                 | 1 day        | ✅     |
 | 3 — Layout       | [phase-3-layout.md](./plan-steps/phase-3-layout.md)             | 0.5 day      | ⏳     |
 | 4 — Dashboard    | [phase-4-dashboard.md](./plan-steps/phase-4-dashboard.md)       | 1 day        | ⏳     |
 | 5 — Patients     | [phase-5-patients.md](./plan-steps/phase-5-patients.md)         | 2 days       | ⏳     |

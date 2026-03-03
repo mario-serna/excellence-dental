@@ -10,7 +10,7 @@
     "error": "Error",
     "success": "Éxito",
     "confirm": "Confirmar",
-    "back": "Volver",
+    "back": "Atrás",
     "next": "Siguiente",
     "submit": "Enviar",
     "close": "Cerrar",
@@ -24,12 +24,15 @@
     "print": "Imprimir",
     "refresh": "Actualizar",
     "clear": "Limpiar",
-    "reset": "Restablecer",
+    "reset": "Reiniciar",
     "copy": "Copiar",
     "paste": "Pegar",
     "cut": "Cortar",
     "undo": "Deshacer",
-    "redo": "Rehacer"
+    "redo": "Rehacer",
+    "previous": "Anterior",
+    "appName": "Clínica Dental Excellence",
+    "appDescription": "Sistema de Gestión"
   },
   "auth": {
     "login": "Iniciar Sesión",
@@ -58,7 +61,7 @@
       "unknown": "Desconocido"
     },
     "pleaseLogin": "Por favor inicia sesión para continuar",
-    "noPermission": "No tienes permiso para acceder a esta página"
+    "noPermission": "No tienes permisos para acceder a esta página"
   },
   "navigation": {
     "dashboard": "Panel Principal",
@@ -152,5 +155,20 @@
     "sessionExpired": "Tu sesión ha expirado",
     "welcome": "Bienvenido a Excellence Dental",
     "description": "Tu proveedor de atención dental de confianza"
+  },
+  "dashboard": {
+    "welcome": "Bienvenido al Sistema de Gestión Dental Excellence",
+    "recentActivity": "Actividad Reciente",
+    "noRecentActivity": "No hay actividad reciente",
+    "metrics": {
+      "totalPatients": "Total de Pacientes",
+      "activePatients": "Pacientes activos",
+      "todaysAppointments": "Citas de Hoy",
+      "scheduledToday": "Programadas para hoy",
+      "pendingTasks": "Tareas Pendientes",
+      "toBeCompleted": "Para completar",
+      "revenueThisMonth": "Ingresos Mes Actual",
+      "totalCollected": "Total recaudado"
+    }
   }
 }

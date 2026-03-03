@@ -1,5 +1,6 @@
 ---
 trigger: always_on
+description: Before writing any code, always follow the implementation protocol.
 ---
 
 # Code Generation Rules

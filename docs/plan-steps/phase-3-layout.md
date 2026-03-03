@@ -12,7 +12,8 @@ Create the main application shell with sidebar navigation, top navigation, and r
 // app/[locale]/(dashboard)/layout.tsx
 import { Sidebar } from '@/components/layout/Sidebar';
 import { TopNav } from '@/components/layout/TopNav';
-import { createClient } from '@/lib/supabase/server';
+import { MobileNav } from '@/components/layout/MobileNav';
+import { AuthProviderFactory } from '@/features/auth/core/factories/auth-provider-factory';
 import { redirect } from 'next/navigation';
 
 export default async function DashboardLayout({
@@ -20,10 +21,10 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = createClient();
+  const authProvider = AuthProviderFactory.createMiddlewareProvider();
   const {
     data: { session },
-  } = await supabase.auth.getSession();
+  } = await authProvider.getSession();
 
   if (!session) {
     redirect('/login');
@@ -31,10 +32,19 @@ export default async function DashboardLayout({
 
   return (
     <div className="flex h-screen bg-background">
-      <Sidebar />
+      {/* Desktop Sidebar */}
+      <div className="hidden md:flex">
+        <Sidebar />
+      </div>
+
       <div className="flex-1 flex flex-col overflow-hidden">
         <TopNav />
         <main className="flex-1 overflow-y-auto p-6">{children}</main>
+      </div>
+
+      {/* Mobile Navigation */}
+      <div className="md:hidden">
+        <MobileNav />
       </div>
     </div>
   );
@@ -49,8 +59,9 @@ export default async function DashboardLayout({
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { useUser } from '@/hooks/useUser';
-import { useRole } from '@/hooks/useRole';
+import { useAuth } from '@/features/auth/core/hooks/use-auth';
+import { useRole } from '@/features/auth/core/hooks/use-role';
+import { USER_ROLES } from '@/features/auth/core/types/role.types';
 import {
   LayoutDashboard,
   Users,
@@ -58,10 +69,10 @@ import {
   Settings,
   LogOut,
   Stethoscope,
-  FileText,
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { useTranslations } from 'next-intl';
 
 const navItems = [
   {
@@ -92,14 +103,12 @@ const navItems = [
 
 export function Sidebar() {
   const pathname = usePathname();
-  const { user } = useUser();
-  const { isAdmin } = useRole();
-  const userRole = user?.app_metadata?.role;
+  const { user, signOut } = useAuth();
+  const { hasAccess } = useRole();
+  const t = useTranslations();
 
   const handleLogout = async () => {
-    const { createClient } = await import('@/lib/supabase/client');
-    const supabase = createClient();
-    await supabase.auth.signOut();
+    await signOut();
     window.location.href = '/login';
   };
 
@@ -121,7 +130,7 @@ export function Sidebar() {
       {/* Navigation */}
       <nav className="flex-1 space-y-1 p-3">
         {navItems.map((item) => {
-          if (item.adminOnly && !isAdmin) return null;
+          if (item.adminOnly && !hasAccess(USER_ROLES.admin)) return null;
 
           const isActive = pathname.startsWith(item.href);
           const Icon = item.icon;
@@ -138,7 +147,7 @@ export function Sidebar() {
               )}
             >
               <Icon className="h-4 w-4" />
-              <span>{item.label}</span>
+              <span>{t(`navigation.${item.translationKey}`)}</span>
             </Link>
           );
         })}
@@ -148,17 +157,15 @@ export function Sidebar() {
       <div className="border-t p-4">
         <div className="flex items-center gap-3">
           <Avatar className="h-8 w-8">
-            <AvatarImage src={user?.user_metadata?.avatar_url} />
+            <AvatarImage src={user?.metadata?.avatar_url} />
             <AvatarFallback className="text-xs">
-              {user?.user_metadata?.full_name?.[0] || 'U'}
+              {user?.email?.[0]?.toUpperCase() || 'U'}
             </AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
-            <p className="truncate text-sm font-medium">
-              {user?.user_metadata?.full_name}
-            </p>
+            <p className="truncate text-sm font-medium">{user?.email}</p>
             <p className="truncate text-xs text-muted-foreground capitalize">
-              {userRole}
+              {user?.role}
             </p>
           </div>
           <Button
@@ -186,7 +193,7 @@ import { Bell, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { useRole } from '@/hooks/useRole';
+import { useRole } from '@/features/auth/core/hooks/use-role';
 import { useTranslations } from 'next-intl';
 
 export function TopNav() {
@@ -200,7 +207,7 @@ export function TopNav() {
     if (pathname.startsWith('/appointments'))
       return t('navigation.appointments');
     if (pathname.startsWith('/admin')) return t('navigation.users');
-    return 'Dashboard';
+    return t('navigation.dashboard');
   };
 
   const getRoleBadgeColor = () => {
@@ -276,54 +283,48 @@ export function MobileNav() {
 
 ### 3.5 Updated Layout with Mobile Support
 
-```tsx
 // app/[locale]/(dashboard)/layout.tsx (updated)
 import { Sidebar } from '@/components/layout/Sidebar';
 import { TopNav } from '@/components/layout/TopNav';
 import { MobileNav } from '@/components/layout/MobileNav';
-import { createClient } from '@/lib/supabase/server';
+import { AuthProviderFactory } from '@/features/auth/core/factories/auth-provider-factory';
 import { redirect } from 'next/navigation';
 
 export default async function DashboardLayout({
-  children,
+children,
 }: {
-  children: React.ReactNode;
+children: React.ReactNode;
 }) {
-  const supabase = createClient();
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+const authProvider = AuthProviderFactory.createMiddlewareProvider();
+const {
+data: { session },
+} = await authProvider.getSession();
 
-  if (!session) {
-    redirect('/login');
-  }
+if (!session) {
+redirect('/login');
+}
 
-  return (
-    <div className="flex h-screen bg-background">
-      {/* Desktop Sidebar */}
-      <div className="hidden md:flex">
-        <Sidebar />
-      </div>
+return (
+
+<div className="flex h-screen bg-background">
+{/_ Desktop Sidebar _/}
+<div className="hidden md:flex">
+<Sidebar />
+</div>
 
       <div className="flex-1 flex flex-col overflow-hidden">
         <TopNav />
         <main className="flex-1 overflow-y-auto p-6">{children}</main>
       </div>
+
+      {/* Mobile Navigation */}
+      <div className="md:hidden">
+        <MobileNav />
+      </div>
     </div>
-  );
+
+);
 }
-```
-
-## Navigation Structure
-
-### Role-Based Menu Access
-
-| Menu Item    | Route           | Admin | Doctor | Assistant |
-| ------------ | --------------- | ----- | ------ | --------- |
-| Dashboard    | `/dashboard`    | ✅    | ✅     | ✅        |
-| Patients     | `/patients`     | ✅    | ✅     | ✅        |
-| Appointments | `/appointments` | ✅    | ✅     | ✅        |
-| Users        | `/admin/users`  | ✅    | ❌     | ❌        |
 
 ### Breadcrumb Navigation
 
@@ -383,25 +384,28 @@ export function Breadcrumb() {
 
 ### Core Layout
 
-- [ ] Create dashboard layout shell
-- [ ] Build sidebar component with role-based navigation
-- [ ] Implement top navigation with search and notifications
-- [ ] Add mobile responsive navigation
-- [ ] Create breadcrumb navigation
+- [ ] Create dashboard layout shell using `AuthProviderFactory.createMiddlewareProvider()`
+- [ ] Build sidebar component with role-based navigation using `useAuth`, `useRole`, and `USER_ROLES`
+- [ ] Implement top navigation with search, notifications, and role badge
+- [ ] Add mobile responsive navigation with hamburger menu
+- [ ] Create breadcrumb navigation (optional enhancement)
+- [ ] Add navigation translation keys to i18n system
 
 ### Navigation Features
 
-- [ ] Implement active state highlighting
-- [ ] Add role-based menu filtering
-- [ ] Create user profile section with logout
-- [ ] Add search functionality (placeholder for POC)
+- [ ] Implement active state highlighting in sidebar
+- [ ] Add role-based menu filtering (admin sees Users menu)
+- [ ] Create user profile section with avatar, email, role, and logout
+- [ ] Add search functionality placeholder in top nav
+- [ ] Add notification bell with badge (placeholder for POC)
 
 ### Responsive Design
 
-- [ ] Test desktop layout (sidebar persistent)
-- [ ] Test mobile layout (hamburger menu)
-- [ ] Test tablet layout (collapsible sidebar)
+- [ ] Test desktop layout (sidebar persistent with `hidden md:flex`)
+- [ ] Test mobile layout (hamburger menu with Sheet component)
+- [ ] Test tablet layout (responsive breakpoints)
 - [ ] Verify navigation works across all screen sizes
+- [ ] Ensure proper spacing and typography on all devices
 
 ## Deliverables
 
