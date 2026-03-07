@@ -1,18 +1,9 @@
-// Re-exports existing interfaces and provider contracts.
-// Concrete implementations are never part of the public API.
+// Core classes
+export { AuthError } from './auth-error';
+export { ClientAuthProvider } from './client-auth-provider';
+export { ServerAuthProvider } from './server-auth-provider';
 
-// Core classes and types
-export { AuthError, ClientAuthProvider, ServerAuthProvider } from './core';
-export type {
-  AuthResult,
-  User,
-} from './core/interfaces/auth-provider.interface';
-export {
-  ROLE_GROUPS,
-  ROLE_HIERARCHY,
-  USER_ROLES,
-} from './core/types/role.types';
-export type { UserRole } from './core/types/role.types';
-
-// Provider constants
-export { PROVIDER_VENDORS } from '@/providers/provider';
+// Types and interfaces
+export type { AuthResult, User } from './interfaces/auth-provider.interface';
+export { ROLE_GROUPS, ROLE_HIERARCHY, USER_ROLES } from './types/role.types';
+export type { UserRole } from './types/role.types';

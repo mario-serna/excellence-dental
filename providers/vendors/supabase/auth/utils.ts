@@ -1,6 +1,5 @@
-import type { User as SupabaseUser } from '@supabase/supabase-js';
-import type { User } from '../core/interfaces/auth-provider.interface';
-import { USER_ROLES } from '../core/types/role.types';
+import { User, USER_ROLES } from '@/providers';
+import { User as SupabaseUser } from '@supabase/supabase-js';
 
 /**
  * Maps a raw Supabase user object to the application's User type.

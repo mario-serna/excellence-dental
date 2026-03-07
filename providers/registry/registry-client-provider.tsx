@@ -5,13 +5,13 @@
 
 'use client';
 
+import { PROVIDER_DOMAINS } from '@/providers';
 import { createContext, useContext, useRef, type ReactNode } from 'react';
-import { SupabaseClientAuthProvider } from '../domain/auth/supabase/client-auth-provider';
-import { REGISTRY_KEYS } from './registry-keys';
+import { SupabaseClientAuthProvider } from '../vendors/supabase/auth';
 
 // Create a separate client registry to avoid type conflicts
 const clientProvoders = {
-  [REGISTRY_KEYS.AUTH]: new SupabaseClientAuthProvider(),
+  [PROVIDER_DOMAINS.AUTH]: new SupabaseClientAuthProvider(),
 };
 
 const RegistryContext = createContext(clientProvoders);

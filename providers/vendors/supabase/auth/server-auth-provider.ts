@@ -3,10 +3,8 @@
  * Handles server-side authentication with elevated privileges.
  */
 
-import { PROVIDER_VENDORS } from '@/providers';
-import { getSupabaseServerClient } from '@/providers/vendors/supabase/supabase.server';
-import { ServerAuthProvider } from '../core';
-import type { User } from '../core/interfaces/auth-provider.interface';
+import { PROVIDER_VENDORS, ServerAuthProvider, User } from '@/providers';
+import { getSupabaseServerClient } from '../supabase.server';
 import { mapUser } from './utils';
 
 export class SupabaseServerAuthProvider extends ServerAuthProvider {

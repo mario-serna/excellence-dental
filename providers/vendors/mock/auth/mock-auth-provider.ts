@@ -3,14 +3,14 @@
  * Simulates authentication without external dependencies.
  */
 
-import { PROVIDER_VENDORS } from '@/providers';
-import { ClientAuthProvider } from '../core';
-import type {
+import {
   AuthResult,
+  ClientAuthProvider,
+  PROVIDER_VENDORS,
   User,
-} from '../core/interfaces/auth-provider.interface';
-import type { UserRole } from '../core/types/role.types';
-import { USER_ROLES } from '../core/types/role.types';
+  USER_ROLES,
+  UserRole,
+} from '@/providers';
 
 const DEFAULT_USER: User = {
   id: 'mock-id',

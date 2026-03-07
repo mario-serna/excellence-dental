@@ -5,14 +5,14 @@
 
 'use client';
 
-import { PROVIDER_VENDORS } from '@/providers';
-import { getSupabaseBrowserClient } from '@/providers/vendors/supabase/supabase.client';
-import { ClientAuthProvider } from '../core';
-import type {
+import {
   AuthResult,
+  ClientAuthProvider,
+  PROVIDER_VENDORS,
   User,
-} from '../core/interfaces/auth-provider.interface';
-import type { UserRole } from '../core/types/role.types';
+  UserRole,
+} from '@/providers';
+import { getSupabaseBrowserClient } from '../supabase.client';
 import { mapUser } from './utils';
 
 export class SupabaseClientAuthProvider extends ClientAuthProvider {

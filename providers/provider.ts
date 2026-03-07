@@ -1,4 +1,4 @@
-// Provider scope constants - avoids string repetition
+// Provider vendor constants - avoids string repetition
 export const PROVIDER_VENDORS = {
   SUPABASE: 'supabase',
   MOCK: 'mock',
