@@ -10,15 +10,11 @@ export default async function LocaleLayout(props: any) {
     notFound();
   }
 
-  const messages = await getMessages();
+  const messages = await getMessages({ locale: params.locale });
 
   return (
-    <html lang={params.locale}>
-      <body>
-        <NextIntlClientProvider messages={messages}>
-          {props.children}
-        </NextIntlClientProvider>
-      </body>
-    </html>
+    <NextIntlClientProvider messages={messages}>
+      {props.children}
+    </NextIntlClientProvider>
   );
 }

@@ -1,3 +1,4 @@
+import { RegistryClientProvider } from '@/providers';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
@@ -17,5 +18,11 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return children;
+  return (
+    <html>
+      <body>
+        <RegistryClientProvider>{children}</RegistryClientProvider>
+      </body>
+    </html>
+  );
 }
