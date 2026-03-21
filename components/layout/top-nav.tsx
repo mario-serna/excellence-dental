@@ -2,9 +2,9 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useRole } from '@/features/auth/core/hooks/use-role';
-import { USER_ROLES } from '@/features/auth/core/types/role.types';
+import { useAuth } from '@/features/auth/hooks/use-auth';
 import { APP_ROUTES } from '@/lib/routes';
+import { USER_ROLES } from '@/providers/domain/auth';
 import { Bell, Search } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
@@ -13,7 +13,8 @@ import { MobileNav } from './mobile-nav';
 
 function TopNavComponent() {
   const pathname = usePathname();
-  const { role } = useRole();
+  const { user } = useAuth();
+  const role = user?.role;
   const t = useTranslations();
 
   const pageTitle = useMemo(() => {

@@ -53,6 +53,11 @@
     "loginErrorTitle": "Authentication Error",
     "loginDescription": "Access your account",
     "signIn": "Sign In",
+    "emailNotConfirmed": "Please confirm your email address",
+    "passwordTooShort": "Password must be at least 6 characters",
+    "tooManyRequests": "Too many attempts. Please try again later",
+    "userAlreadyExists": "An account with this email already exists",
+    "invalidPassword": "Invalid password",
     "roles": {
       "admin": "Administrator",
       "doctor": "Doctor",
@@ -110,7 +115,19 @@
     "dateTime": "Date and Time",
     "duration": "Duration",
     "serviceType": "Service Type",
-    "status": "Status"
+    "status": {
+      "label": "Status",
+      "scheduled": "Scheduled",
+      "confirmed": "Confirmed",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "noShow": "No Show",
+      "unknown": "Unknown"
+    },
+    "emptyState": {
+      "title": "No upcoming appointments",
+      "description": "Your schedule is clear for now"
+    }
   },
   "users": {
     "title": "Users",
@@ -141,6 +158,11 @@
     "noConflicts": "No conflicts",
     "availableSlots": "Available time slots"
   },
+  "greeting": {
+    "morning": "Good morning",
+    "afternoon": "Good afternoon",
+    "evening": "Good evening"
+  },
   "messages": {
     "success": "Operation completed successfully",
     "error": "An error occurred",
@@ -157,18 +179,47 @@
     "description": "Your trusted dental care provider"
   },
   "dashboard": {
-    "welcome": "Welcome to the Excellence Dental Management System",
-    "recentActivity": "Recent Activity",
-    "noRecentActivity": "No recent activity",
-    "metrics": {
+    "title": "Dashboard",
+    "welcome": "Welcome back! Here's your clinic overview.",
+    "unauthorized": {
+      "message": "Access Restricted",
+      "description": "You don't have the required permissions to view this dashboard."
+    },
+    "quickActions": {
+      "title": "Quick Actions",
+      "addNew": "Add Action",
+      "bookAppointment": "Book Appointment",
+      "registerPatient": "Register Patient",
+      "checkIn": "Check In",
+      "dailyReport": "Daily Report",
+      "manageDoctors": "Manage Doctors",
+      "viewReports": "View Reports",
+      "viewPatients": "View Patients",
+      "manageSchedule": "Manage Schedule"
+    },
+    "stats": {
       "totalPatients": "Total Patients",
-      "activePatients": "Active patients",
-      "todaysAppointments": "Today's Appointments",
+      "registeredPatients": "Registered patients",
+      "todayAppointments": "Today's Appointments",
       "scheduledToday": "Scheduled today",
-      "pendingTasks": "Pending Tasks",
-      "toBeCompleted": "To be completed",
-      "revenueThisMonth": "Revenue This Month",
-      "totalCollected": "Total collected"
+      "activeDoctors": "Active Doctors",
+      "onStaff": "On staff",
+      "weekAppointments": "Week Appointments",
+      "thisWeek": "This week",
+      "patientsSeen": "Patients Seen",
+      "thisMonth": "This month",
+      "avgDuration": "Avg Duration",
+      "perVisit": "Per visit",
+      "checkIns": "Check-ins Today",
+      "soFar": "So far",
+      "pendingForms": "Pending Forms",
+      "needAttention": "Need attention",
+      "availableSlots": "Available Slots",
+      "today": "Today"
+    },
+    "schedule": {
+      "title": "Today's Schedule",
+      "viewAll": "View All"
     }
   }
 }

@@ -1,110 +1,73 @@
-import type { NextRequest } from 'next/server';
-import { AccessControl } from '../core/access-control';
-import { AuthProviderFactory } from '../core/factories/auth-provider-factory';
-import { RouteClassifier } from '../core/route-classifier';
-import { AuthResult, ROUTE_TYPES } from '../core/types/route.types';
+/**
+ * Authentication middleware for Next.js App Router.
+ * Protects routes and handles authentication state using providers registry.
+ */
 
-export class AuthMiddleware {
-  private static authProvider = AuthProviderFactory.createMiddlewareProvider();
+import { APP_ROUTES } from '@/lib/routes';
+import { NextRequest, NextResponse } from 'next/server';
+import { serverProviders } from '../../../providers/registry/registry-server-provider';
 
-  static async handleAuth(request: NextRequest): Promise<AuthResult> {
-    const pathname = request.nextUrl.pathname;
+/**
+ * Middleware configuration for Next.js.
+ * Matches all routes except static assets and API routes.
+ */
+export const config = {
+  matcher: [
+    /*
+     * Match all request paths except for:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - api (API routes)
+     * Feel free to modify this pattern to include more paths.
+     */
+    '/((?!_next/static|_next/image|favicon.ico|api.*).*)',
+  ],
+};
 
-    // Skip auth for static assets and API routes
-    if (RouteClassifier.isAssetRoute(pathname)) {
-      return { isAuthenticated: false, allowAccess: true };
+/**
+ * Main authentication middleware function.
+ * Handles authentication for all routes in the application.
+ */
+export async function middleware(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+
+  try {
+    // Get current user from auth provider registry
+    const user = await serverProviders.auth.getUser(request);
+
+    // Extract locale from pathname for route checking
+    const segments = pathname.split('/').filter(Boolean);
+    const locale = segments[0]; // First segment is the locale
+    const routeWithoutLocale = '/' + segments.slice(1).join('/'); // Remove locale from path
+
+    // Redirect to login if not authenticated and accessing protected route
+    if (!user && routeWithoutLocale.startsWith(APP_ROUTES.dashboard)) {
+      return NextResponse.redirect(
+        new URL(`/${locale}${APP_ROUTES.login}`, request.url)
+      );
     }
 
-    const locale = RouteClassifier.extractLocale(pathname);
-
-    // Handle login routes
-    if (RouteClassifier.isLoginRoute(pathname)) {
-      return this.handleLoginRoute(request, locale);
+    // Redirect authenticated users from login page to dashboard
+    if (user && routeWithoutLocale.startsWith(APP_ROUTES.login)) {
+      return NextResponse.redirect(
+        new URL(`/${locale}${APP_ROUTES.dashboard}`, request.url)
+      );
     }
 
-    // Handle public routes
-    if (RouteClassifier.isPublicRoute(pathname)) {
-      return { isAuthenticated: false, allowAccess: true };
+    // Continue to the requested route
+    return NextResponse.next();
+  } catch (error) {
+    // Extract locale for redirect with fallback
+    const segments = pathname.split('/').filter(Boolean);
+    const locale = segments[0] || 'en';
+
+    // If provider fails, allow access to login page, redirect others
+    if (!pathname.includes(APP_ROUTES.login)) {
+      return NextResponse.redirect(
+        new URL(`/${locale}${APP_ROUTES.login}`, request.url)
+      );
     }
-
-    // Handle protected routes
-    return this.handleProtectedRoute(request, pathname, locale);
-  }
-
-  private static async handleLoginRoute(
-    request: NextRequest,
-    locale: string
-  ): Promise<AuthResult> {
-    try {
-      const {
-        data: { user },
-      } = await this.authProvider.getUser(request);
-      if (user) {
-        const redirectUrl = AccessControl.getRedirectForRole(
-          user.user_metadata?.role || user.app_metadata?.role,
-          locale
-        );
-        return { isAuthenticated: true, user, redirectUrl, allowAccess: false };
-      }
-    } catch (error) {
-      // Allow access to login on auth check failure
-    }
-    return { isAuthenticated: false, allowAccess: true };
-  }
-
-  private static async handleProtectedRoute(
-    request: NextRequest,
-    pathname: string,
-    locale: string
-  ): Promise<AuthResult> {
-    try {
-      const {
-        data: { user },
-      } = await this.authProvider.getUser(request);
-
-      if (!user) {
-        const redirectUrl = AccessControl.getLoginRedirect(locale, pathname);
-        return { isAuthenticated: false, redirectUrl, allowAccess: false };
-      }
-
-      const userRole = user.user_metadata?.role || user.app_metadata?.role;
-
-      // Check role-based access
-      if (RouteClassifier.isAdminRoute(pathname)) {
-        if (!AccessControl.canAccessRoute(userRole, ROUTE_TYPES.ADMIN)) {
-          const redirectUrl = AccessControl.getRedirectForRole(
-            userRole,
-            locale
-          );
-          return {
-            isAuthenticated: true,
-            user,
-            redirectUrl,
-            allowAccess: false,
-          };
-        }
-      }
-
-      if (RouteClassifier.isClinicalRoute(pathname)) {
-        if (!AccessControl.canAccessRoute(userRole, ROUTE_TYPES.CLINICAL)) {
-          const redirectUrl = AccessControl.getRedirectForRole(
-            userRole,
-            locale
-          );
-          return {
-            isAuthenticated: true,
-            user,
-            redirectUrl,
-            allowAccess: false,
-          };
-        }
-      }
-
-      return { isAuthenticated: true, user, allowAccess: true };
-    } catch (error) {
-      console.error('Auth middleware error:', error);
-      const redirectUrl = AccessControl.getLoginRedirect(locale);
-      return { isAuthenticated: false, redirectUrl, allowAccess: false };
-    }
+    return NextResponse.next();
   }
 }

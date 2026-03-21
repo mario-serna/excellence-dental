@@ -1,8 +1,8 @@
 'use client';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { USER_ROLES, type UserRole } from '@/providers/domain/auth';
 import { useTranslations } from 'next-intl';
-import { useRole } from '../core/hooks/use-role';
-import { USER_ROLES, type UserRole } from '../core/types/role.types';
+import { useAuth } from '../hooks/use-auth';
 
 interface RoleGuardProps {
   children: React.ReactNode;
@@ -17,16 +17,16 @@ export function RoleGuard({
   requireAll = false,
   fallback,
 }: RoleGuardProps) {
-  const { role, hasAccess } = useRole();
+  const { user } = useAuth();
   const t = useTranslations('auth');
 
-  if (!role) {
+  if (!user) {
     return fallback || <div>{t('pleaseLogin')}</div>;
   }
 
   const hasPermission = requireAll
-    ? allowedRoles.every((r) => hasAccess(r))
-    : allowedRoles.some((r) => hasAccess(r));
+    ? allowedRoles.every((r) => user.role === r)
+    : allowedRoles.some((r) => user.role === r);
 
   if (!hasPermission) {
     return (

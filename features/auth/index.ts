@@ -1,24 +1,35 @@
-export * from './components/login-form';
-export * from './components/role-guard';
-export * from './config/auth-config';
-export * from './core/hooks/use-auth';
-export * from './core/hooks/use-role';
-export type {
-  AuthResult,
-  IAuthProvider,
-  User,
-} from './core/interfaces/auth-provider.interface';
-export { authService } from './core/services/auth.service';
-export * from './core/types/role.types';
+/**
+ * Authentication feature public API.
+ * Exports all auth-related functionality from providers system.
+ */
+
+// Components
+export { LogoutButton } from './components/logout-button';
+
+// Actions
+export { signInAction, signOutAction } from './actions/auth.actions';
+
+// Middleware
+export { config } from './middleware/auth-middleware';
+
+// Re-export types from providers (maintains clean feature API)
+export type { AuthResult, User, UserRole } from '@/providers/domain/auth';
+
+// Re-export core classes from providers
 export {
-  getAuthErrorMessage,
-  getRoleDisplayName as getRoleDisplayNameI18n,
-} from './core/utils/i18n';
+  AuthError,
+  ClientAuthProvider,
+  ServerAuthProvider,
+} from '@/providers/domain/auth';
+
+// Feature-specific utilities (using providers implementation)
 export {
   getAllRoles,
   getRoleDisplayName,
   hasHigherRole,
   isInRoleGroup,
   isValidRole,
-} from './core/utils/role-utils';
+} from './utils/role-utils';
+
+// Pages
 export * from './pages/login-page';

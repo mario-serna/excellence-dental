@@ -2,11 +2,10 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { useAuth } from '@/features/auth/core/hooks/use-auth';
-import { useRole } from '@/features/auth/core/hooks/use-role';
-import { USER_ROLES } from '@/features/auth/core/types/role.types';
+import { useAuth } from '@/features/auth/hooks/use-auth';
 import { useNavigation } from '@/lib/hooks/use-navigation';
 import { cn } from '@/lib/utils';
+import { USER_ROLES } from '@/providers/domain/auth';
 import {
   Calendar,
   LayoutDashboard,
@@ -50,9 +49,15 @@ const navItems = [
 export function Sidebar() {
   const pathname = usePathname();
   const { user, signOut } = useAuth();
-  const { hasAccess } = useRole();
   const { navigateToLogin } = useNavigation();
   const t = useTranslations();
+
+  const hasAccess = (requiredRole: string) => {
+    if (!user?.role) return false;
+    // Simple role hierarchy check - admin can access everything
+    if (user.role === USER_ROLES.admin) return true;
+    return user.role === requiredRole;
+  };
 
   const handleLogout = async () => {
     await signOut();

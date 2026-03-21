@@ -7,6 +7,7 @@
 - String-based role definitions lead to maintenance issues and type safety problems
 - Hard to switch authentication providers without extensive code changes
 - Utility functions that depend on React hooks violate React rules
+- Provider implementations scattered across the codebase make maintenance difficult
 
 ## Solution Steps
 
@@ -15,6 +16,7 @@
 3. **Type-Safe Roles**: Use object-based role definitions instead of string unions
 4. **Next.js Integration**: Use thin wrapper route files with feature page components
 5. **Dependency Injection**: Pass dependencies (like translation functions) as parameters instead of importing hooks
+6. **Provider System**: Centralized provider architecture with domain interfaces and vendor implementations
 
 ## Prevention Strategies
 
@@ -24,6 +26,88 @@
 - Separate routing concerns from business logic
 - **Never use React hooks in utility functions** - pass dependencies as parameters
 - **Use factory pattern for provider creation** to enable plugin switching
+- **Centralize provider architecture** in dedicated `providers/` directory with clear separation of concerns
+
+## Provider System Architecture
+
+### **Structure Overview**
+
+```
+providers/
+├── domain/           # Domain interfaces and types
+│   └── auth/        # Authentication domain interfaces
+├── vendors/          # Vendor-specific implementations
+│   ├── supabase/     # Supabase provider implementations
+│   └── mock/         # Mock provider for testing
+├── registry/         # Provider registry and client setup
+└── index.ts         # Public API exports
+```
+
+### **Domain Interfaces**
+
+Define contracts that vendor implementations must follow:
+
+```typescript
+// providers/domain/auth/interfaces/auth-provider.interface.ts
+export interface IAuthClientProvider {
+  signIn(email: string, password: string): Promise<AuthResult>;
+  signOut(): Promise<void>;
+  getCurrentUser(): Promise<User | null>;
+}
+
+export interface IAuthServerProvider {
+  getUser(request: Request): Promise<User | null>;
+}
+```
+
+### **Vendor Implementations**
+
+Concrete implementations of domain interfaces:
+
+```typescript
+// providers/vendors/supabase/auth/client-auth-provider.ts
+export class SupabaseClientProvider
+  extends Provider
+  implements IAuthClientProvider
+{
+  readonly name = Provider.createName(
+    PROVIDER_VENDORS.SUPABASE,
+    PROVIDER_CONTEXTS.CLIENT,
+    PROVIDER_DOMAINS.AUTH
+  );
+
+  async signIn(email: string, password: string): Promise<AuthResult> {
+    // Supabase-specific implementation
+  }
+}
+```
+
+### **Provider Registry**
+
+Centralized provider management and factory pattern:
+
+```typescript
+// providers/registry/registry-client-provider.tsx
+export class RegistryClientProvider {
+  private static authProvider: IAuthClientProvider;
+
+  static getAuthProvider(): IAuthClientProvider {
+    if (!this.authProvider) {
+      this.authProvider = AuthProviderFactory.createAuthProvider();
+    }
+    return this.authProvider;
+  }
+}
+```
+
+### **Benefits of Provider System**
+
+1. **Decoupling**: Business logic separated from vendor-specific code
+2. **Testability**: Easy to mock providers for testing
+3. **Swappability**: Switch providers via configuration
+4. **Maintainability**: All provider code in one location
+5. **Type Safety**: Compile-time validation of provider contracts
+6. **Extensibility**: Easy to add new vendors or domains
 
 ## Dependency Injection Pattern
 
@@ -57,30 +141,20 @@ const t = useTranslations('auth.roles');
 const displayName = getRoleDisplayName(user.role, t);
 ```
 
-## Factory Pattern for Providers
+## Provider Registry Pattern
 
-### **Provider Factory**
+### **Registry Implementation**
 
 ```typescript
-export class AuthProviderFactory {
-  static createAuthProvider(): IAuthProvider {
-    switch (authConfig.provider) {
-      case AUTH_PROVIDERS.SUPABASE:
-        return new SupabaseAuthProvider();
-      default:
-        throw new Error(`Unsupported auth provider: ${authConfig.provider}`);
-    }
-  }
+// providers/registry/registry-client-provider.tsx
+export class RegistryClientProvider {
+  private static authProvider: IAuthClientProvider;
 
-  static createMiddlewareProvider(): IMiddlewareAuthProvider {
-    switch (authConfig.provider) {
-      case AUTH_PROVIDERS.SUPABASE:
-        return new SupabaseMiddlewareProvider();
-      default:
-        throw new Error(
-          `Unsupported middleware provider: ${authConfig.provider}`
-        );
+  static getAuthProvider(): IAuthClientProvider {
+    if (!this.authProvider) {
+      this.authProvider = AuthProviderFactory.createAuthProvider();
     }
+    return this.authProvider;
   }
 }
 ```
@@ -90,7 +164,7 @@ export class AuthProviderFactory {
 ```typescript
 // Environment-based provider switching
 export const authConfig = {
-  provider: process.env.NEXT_PUBLIC_AUTH_PROVIDER || AUTH_PROVIDERS.SUPABASE,
+  provider: process.env.NEXT_PUBLIC_AUTH_PROVIDER || PROVIDER_VENDORS.SUPABASE,
   // ...
 };
 ```
@@ -98,6 +172,9 @@ export const authConfig = {
 ## Recovery Commands
 
 ```bash
+# Create provider structure
+mkdir -p providers/{domain,vendors,registry}
+
 # Create feature structure
 mkdir -p features/auth/{core,providers,components,pages,config}
 

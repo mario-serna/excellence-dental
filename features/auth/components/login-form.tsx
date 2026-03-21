@@ -11,18 +11,21 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { PasswordInput } from '@/components/ui/password-input';
+import { useNavigation } from '@/lib/hooks/use-navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { useAuth } from '../core/hooks/use-auth';
+import { useAuth } from '../hooks/use-auth';
 
 export function LoginForm() {
-  const { signIn, loading, error } = useAuth();
+  const { signIn, loading, user } = useAuth();
+  const [error, setError] = useState<string | null>(null);
   const [showError, setShowError] = useState(false);
   const t = useTranslations();
+  const { replaceToDashboard } = useNavigation();
 
   const loginSchema = z.object({
     email: z.email(t('forms.invalidEmail')),
@@ -40,9 +43,28 @@ export function LoginForm() {
   });
 
   const onSubmit = async (data: LoginFormData) => {
+    setError(null);
     setShowError(false);
-    await signIn(data.email, data.password);
-    setShowError(true);
+
+    try {
+      const result = await signIn(data.email, data.password);
+
+      console.log(result);
+
+      if (result.success) {
+        replaceToDashboard();
+      } else {
+        // The error is now a locale key, so translate it
+        const errorMessage = result.error
+          ? t(result.error)
+          : t('auth.loginError');
+        setError(errorMessage);
+        setShowError(true);
+      }
+    } catch (err) {
+      setError(t('messages.error'));
+      setShowError(true);
+    }
   };
 
   return (
@@ -104,7 +126,7 @@ export function LoginForm() {
         {error && showError && (
           <Alert variant="destructive" className="mb-4 relative">
             <AlertTitle>{t('auth.loginErrorTitle')}</AlertTitle>
-            <AlertDescription>{t('auth.loginError')}</AlertDescription>
+            <AlertDescription>{error}</AlertDescription>
             <Button
               type="button"
               variant="ghost"

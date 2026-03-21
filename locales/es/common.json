@@ -53,6 +53,11 @@
     "loginErrorTitle": "Error de autenticación",
     "loginDescription": "Accede a tu cuenta",
     "signIn": "Iniciar sesión",
+    "emailNotConfirmed": "Por favor, confirma tu dirección de correo",
+    "passwordTooShort": "La contraseña debe tener al menos 6 caracteres",
+    "tooManyRequests": "Demasiados intentos. Por favor, intenta más tarde",
+    "userAlreadyExists": "Ya existe una cuenta con este correo electrónico",
+    "invalidPassword": "Contraseña inválida",
     "signOut": "Cerrar sesión",
     "roles": {
       "admin": "Administrador",
@@ -110,7 +115,19 @@
     "dateTime": "Fecha y Hora",
     "duration": "Duración",
     "serviceType": "Tipo de Servicio",
-    "status": "Estado"
+    "status": {
+      "label": "Estado",
+      "scheduled": "Programada",
+      "confirmed": "Confirmada",
+      "completed": "Completada",
+      "cancelled": "Cancelada",
+      "noShow": "No Asistió",
+      "unknown": "Desconocido"
+    },
+    "emptyState": {
+      "title": "No hay próximas citas",
+      "description": "Tu horario está despejado por ahora"
+    }
   },
   "users": {
     "title": "Usuarios",
@@ -141,6 +158,11 @@
     "noConflicts": "Sin conflictos",
     "availableSlots": "Horarios disponibles"
   },
+  "greeting": {
+    "morning": "Buenos días",
+    "afternoon": "Buenas tardes",
+    "evening": "Buenas noches"
+  },
   "messages": {
     "success": "Operación completada exitosamente",
     "error": "Ha ocurrido un error",
@@ -157,18 +179,47 @@
     "description": "Tu proveedor de atención dental de confianza"
   },
   "dashboard": {
-    "welcome": "Bienvenido al Sistema de Gestión Dental Excellence",
-    "recentActivity": "Actividad Reciente",
-    "noRecentActivity": "No hay actividad reciente",
-    "metrics": {
+    "title": "Panel Principal",
+    "welcome": "Bienvenido al Sistema de Gestión Dental Excellence.",
+    "unauthorized": {
+      "message": "Acceso Restringido",
+      "description": "No tienes los permisos requeridos para ver este panel."
+    },
+    "quickActions": {
+      "title": "Acciones Rápidas",
+      "addNew": "Agregar Acción",
+      "bookAppointment": "Reservar Cita",
+      "registerPatient": "Registrar Paciente",
+      "checkIn": "Check-in",
+      "dailyReport": "Reporte Diario",
+      "manageDoctors": "Gestionar Doctores",
+      "viewReports": "Ver Reportes",
+      "viewPatients": "Ver Pacientes",
+      "manageSchedule": "Gestionar Horario"
+    },
+    "stats": {
       "totalPatients": "Total de Pacientes",
-      "activePatients": "Pacientes activos",
-      "todaysAppointments": "Citas de Hoy",
+      "registeredPatients": "Pacientes registrados",
+      "todayAppointments": "Citas de Hoy",
       "scheduledToday": "Programadas para hoy",
-      "pendingTasks": "Tareas Pendientes",
-      "toBeCompleted": "Para completar",
-      "revenueThisMonth": "Ingresos Mes Actual",
-      "totalCollected": "Total recaudado"
+      "activeDoctors": "Doctores Activos",
+      "onStaff": "En el personal",
+      "weekAppointments": "Citas de la Semana",
+      "thisWeek": "Esta semana",
+      "patientsSeen": "Pacientes Atendidos",
+      "thisMonth": "Este mes",
+      "avgDuration": "Duración Promedio",
+      "perVisit": "Por visita",
+      "checkIns": "Check-ins de Hoy",
+      "soFar": "Hasta ahora",
+      "pendingForms": "Formularios Pendientes",
+      "needAttention": "Requieren atención",
+      "availableSlots": "Espacios Disponibles",
+      "today": "Hoy"
+    },
+    "schedule": {
+      "title": "Horario de Hoy",
+      "viewAll": "Ver Todas"
     }
   }
 }
