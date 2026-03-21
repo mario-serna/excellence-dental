@@ -18,6 +18,70 @@ export function mapUser(raw: SupabaseUser): User {
   };
 }
 
+/**
+ * Maps Supabase error messages to locale keys for internationalization
+ */
+export function mapErrorToLocaleKey(errorMessage: string): string {
+  // Common Supabase auth error mappings
+  const errorMappings: Record<string, string> = {
+    'Invalid login credentials': 'auth.invalidCredentials',
+    'Email not confirmed': 'auth.emailNotConfirmed',
+    'Invalid email': 'forms.invalidEmail',
+    'Password should be at least 6 characters': 'auth.passwordTooShort',
+    'Too many requests': 'auth.tooManyRequests',
+    'User already registered': 'auth.userAlreadyExists',
+    'Signup requires a valid password': 'auth.invalidPassword',
+    'Unable to validate email address: invalid format': 'forms.invalidEmail',
+    'Invalid password': 'auth.invalidPassword',
+  };
+
+  // Check for exact matches first
+  if (errorMappings[errorMessage]) {
+    return errorMappings[errorMessage];
+  }
+
+  // Check for partial matches
+  if (errorMessage.includes('Invalid login credentials')) {
+    return 'auth.invalidCredentials';
+  }
+  if (errorMessage.includes('Email not confirmed')) {
+    return 'auth.emailNotConfirmed';
+  }
+  if (
+    errorMessage.includes('Invalid email') ||
+    errorMessage.includes('invalid format')
+  ) {
+    return 'forms.invalidEmail';
+  }
+  if (
+    errorMessage.includes('Password') &&
+    (errorMessage.includes('short') || errorMessage.includes('at least'))
+  ) {
+    return 'auth.passwordTooShort';
+  }
+  if (
+    errorMessage.includes('Too many requests') ||
+    errorMessage.includes('rate limit')
+  ) {
+    return 'auth.tooManyRequests';
+  }
+  if (
+    errorMessage.includes('already registered') ||
+    errorMessage.includes('already exists')
+  ) {
+    return 'auth.userAlreadyExists';
+  }
+  if (errorMessage.includes('network') || errorMessage.includes('connection')) {
+    return 'messages.networkError';
+  }
+  if (errorMessage.includes('server') || errorMessage.includes('internal')) {
+    return 'messages.serverError';
+  }
+
+  // Default fallback
+  return 'messages.error';
+}
+
 // Add future Supabase-specific auth helpers here.
 // Examples:
 //   export function mapSession(raw: SupabaseSession): Session { ... }

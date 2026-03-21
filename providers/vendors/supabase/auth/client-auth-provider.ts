@@ -13,7 +13,7 @@ import {
   UserRole,
 } from '@/providers';
 import { getSupabaseBrowserClient } from '../supabase.client';
-import { mapUser } from './utils';
+import { mapErrorToLocaleKey, mapUser } from './utils';
 
 export class SupabaseClientAuthProvider extends ClientAuthProvider {
   readonly name = ClientAuthProvider.createName(PROVIDER_VENDORS.SUPABASE);
@@ -37,7 +37,8 @@ export class SupabaseClientAuthProvider extends ClientAuthProvider {
     });
 
     if (error) {
-      return { success: false, error: error.message };
+      const localeKey = mapErrorToLocaleKey(error.message);
+      return { success: false, error: localeKey };
     }
 
     return { success: true, user: mapUser(data.user) };

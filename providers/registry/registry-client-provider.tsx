@@ -8,10 +8,16 @@
 import { PROVIDER_DOMAINS } from '@/providers';
 import { createContext, useContext, useRef, type ReactNode } from 'react';
 import { SupabaseClientAuthProvider } from '../vendors/supabase/auth';
+// import { SupabaseClientDashboardProvider } from '../vendors/supabase/dashboard';
+
+// Mock providers
+// import { MockClientAuthProvider } from '../vendors/mock/auth';
+import { MockClientDashboardProvider } from '../vendors/mock/dashboard';
 
 // Create a separate client registry to avoid type conflicts
 const clientProvoders = {
   [PROVIDER_DOMAINS.AUTH]: new SupabaseClientAuthProvider(),
+  [PROVIDER_DOMAINS.DASHBOARD]: new MockClientDashboardProvider(),
 };
 
 const RegistryContext = createContext(clientProvoders);

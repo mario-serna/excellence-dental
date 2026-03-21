@@ -12,7 +12,7 @@ import { createServerClient } from '@supabase/ssr';
  * Uses service role key for elevated privileges.
  * Note: This should only be used in server components/middleware.
  */
-export async function getSupabaseServerClient(request?: Request) {
+export async function getSupabaseServerClient(request: Request) {
   if (!request) {
     throw new Error(
       'Request object is required for server-side Supabase client'
