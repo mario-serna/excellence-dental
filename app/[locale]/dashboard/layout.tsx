@@ -1,16 +1,14 @@
 import { Sidebar, TopNav } from '@/components/layout';
-import { AuthProviderFactory } from '@/features/auth/core/factories/auth-provider-factory';
+import { APP_ROUTES } from '@/lib/routes';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { APP_ROUTES } from '../../../lib/routes';
+import { serverProviders } from '../../../providers/registry/registry-server-provider';
 
 export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const authProvider = AuthProviderFactory.createMiddlewareProvider();
-
   // Get actual request headers from the incoming request
   const requestHeaders = await headers();
   const cookieHeader = requestHeaders.get('cookie') || '';
@@ -25,9 +23,7 @@ export default async function DashboardLayout({
     }
   );
 
-  const {
-    data: { user },
-  } = await authProvider.getUser(request);
+  const user = await serverProviders.auth.getUser(request);
 
   if (!user) {
     redirect(APP_ROUTES.login);
