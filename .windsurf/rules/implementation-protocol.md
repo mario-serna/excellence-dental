@@ -7,6 +7,15 @@ description: Before writing any code, always follow the implementation protocol.
 
 ## 🚨 BEFORE WRITING ANY CODE - FOLLOW THIS EXACTLY
 
+### Step 0: IMPLEMENTATION PREVIEW & CLARIFICATION (MANDATORY)
+
+- **ALWAYS** show a detailed preview of what you plan to implement
+- **ALWAYS** ask clarifying questions if requirements are unclear
+- **ALWAYS** include examples in clarifying questions for better understanding
+- **ALWAYS** include the best approach for each question
+- **NEVER** skip this step unless user explicitly requests direct implementation
+- **WAIT** for user approval before proceeding to implementation
+
 ### Step 1: LESSONS FIRST (MANDATORY)
 
 ```bash
@@ -98,17 +107,26 @@ When you see these patterns → STOP AND READ LESSONS:
 - Creating new files → Read architecture-patterns.md
 - Utility functions → Read dependency injection section
 - Provider creation → Read factory pattern section
+- **NEW**: About to implement code → Must show preview and ask clarifying questions
+
+### 5. IMPLEMENTATION PREVIEW & CLARIFICATION (MANDATORY)
+
+- **Show detailed preview** of what you plan to implement
+- **Ask clarifying questions** if requirements are unclear
+- **Include examples** in clarifying questions
+- **Wait for user approval** before proceeding
 
 ## 📋 IMPLEMENTATION WORKFLOW
 
 1. **STOP** - Don't write code yet
-2. **READ** - lessons/implementation-checklist.md
-3. **RESEARCH** - existing codebase patterns
-4. **VERIFY** - compliance with all rules
-5. **IMPLEMENT** - following established patterns exactly
-6. **TEST** - format, type-check, test
+2. **PREVIEW** - Show implementation plan and ask clarifying questions
+3. **READ** - lessons/implementation-checklist.md
+4. **RESEARCH** - existing codebase patterns
+5. **VERIFY** - compliance with all rules
+6. **IMPLEMENT** - following established patterns exactly
+7. **TEST** - format, type-check, test
 
 ---
 
 **THIS IS NOT OPTIONAL. THIS IS MANDATORY.**
-**LESSONS FIRST, IMPLEMENTATION SECOND.**
+**IMPLEMENTATION PREVIEW & CLARIFICATION FIRST, LESSONS SECOND, IMPLEMENTATION THIRD.**

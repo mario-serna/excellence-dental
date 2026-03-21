@@ -1,84 +1,132 @@
 ---
 trigger: always_on
-description: This file serves as the central entry point for all lessons learned and problem-solving strategies.
+description: This file serves as the central entry point for all lessons learned and problem-solving strategies. It references the comprehensive lessons in ../lessons/ for detailed educational content.
 ---
 
 # Learning & Problem-Solving Hub
 
 ## Overview
 
-This file serves as the central entry point for all lessons learned and problem-solving strategies. As this knowledge base grows, individual topics have been organized into separate files for better maintainability and focus.
+This file serves as the central entry point for all lessons learned and problem-solving strategies. For comprehensive educational content, patterns, and detailed guidance, refer to the lessons directory at **@[.windsurf/lessons]**.
 
-## Topic-Specific Lessons
+## 🎯 Quick Access to Lessons
 
-### [UI Design Implementation](../lessons/ui-design-implementation.md)
+### **Critical Lessons for Implementation**
 
-- Comprehensive UI design system guidelines
-- Responsive design patterns and breakpoints
-- Role-based UI filtering strategies
-- Component conventions and accessibility
-- Design tokens and shadcn/ui integration
+#### **[implementation-checklist.md](../lessons/implementation-checklist.md)** - MANDATORY BEFORE CODING
 
-### [Code Quality & Formatting](../lessons/code-quality.md)
+- 5-step implementation process
+- Object-based constants patterns
+- Feature-based organization rules
+- Dependency injection principles
+- Memory triggers and red flags
 
-- Prettier configuration and best practices
-- VSCode setup and automation
-- Common formatting issues and solutions
-- Recovery commands and templates
+#### **[development-environment.md](../lessons/development-environment.md)** - FILE NAMING COMPLIANCE
 
-### [Testing Setup & Best Practices](../lessons/testing.md)
+- **kebab-case MANDATORY for ALL files**
+- Environment setup procedures
+- Common configuration issues
+- Recovery commands
 
-- Testing infrastructure setup (Vitest, Testing Library)
-- Test organization and configuration
-- Testing strategies and coverage goals
-- Common testing issues and solutions
-
-### [GitHub Workflow & Collaboration](../lessons/github-workflow.md)
-
-- Branch management and naming conventions
-- Pull request processes and requirements
-- Tool limitations and workarounds
-- Git commands and API examples
-- **Branch creation process** - Always check existence before creating
-
-### [Development Environment Setup](../lessons/development-environment.md)
-
-- Initial project configuration
-- Dependency management
-- Git configuration and .gitignore
-- Recovery commands and Docker setup
-
-### [Architecture Patterns](../lessons/architecture-patterns.md)
+#### **[architecture-patterns.md](../lessons/architecture-patterns.md)** - FEATURE-BASED ARCHITECTURE
 
 - Feature-based screaming architecture
+- Dashboard classification as feature
 - Plugin-based dependency decoupling
 - Type-safe role management
-- Next.js app router integration
 
-## Quick Reference
+#### **[component-reusability.md](../lessons/component-reusability.md)** - COMPONENT REUSABILITY PRINCIPLES
 
-### Immediate Actions for Common Issues
+- Critical principles for creating truly reusable React components
+- Avoid translation props that violate reusability
+- Component self-contained i18n management
+- Single responsibility and loose coupling patterns
 
-#### Tool/Command Problems
+### **Supporting Lessons**
 
-1. **PowerShell vs Bash**: Use PowerShell-specific commands
-2. **File Encoding**: Use IDE file creation instead of command-line
-3. **JSON Errors**: Validate syntax and use proper escaping
+#### **[github-workflow.md](../lessons/github-workflow.md)** - COLLABORATION
 
-#### Git Workflow Issues
+- Branch management and naming
+- Pull request processes
+- Tool limitations and workarounds
 
-1. **Branch Switching**: Commit or stash changes first
-2. **Large Commits**: Group related files, plan structure
-3. **Line Endings**: Configure .gitattributes early
+#### **[code-quality.md](../lessons/code-quality.md)** - FORMATTING & STANDARDS
 
-#### Architecture Issues
+- Prettier configuration
+- VSCode setup and automation
+- Common formatting issues
 
-1. **Tight Coupling**: Abstract external dependencies behind interfaces
-2. **Poor Organization**: Use feature-based structure over technical layers
-3. **String-Based Types**: Prefer object-based constants for type safety
-4. **Routing Confusion**: Separate Next.js routes from feature components
+#### **[testing.md](../lessons/testing.md)** - QUALITY ASSURANCE
 
-### Essential Recovery Commands
+- Testing infrastructure setup
+- Test organization and strategies
+- Coverage goals and best practices
+
+#### **[ui-design-implementation.md](../lessons/ui-design-implementation.md)** - UI PATTERNS
+
+- Design system guidelines
+- Responsive design patterns
+- Component conventions
+
+## 🚨 Phase 4 Critical Insights (Dashboard Implementation)
+
+### **Architecture Classification**
+
+**Lesson**: Dashboard is a FEATURE, not shared components
+**Details**: See **[architecture-patterns.md](../lessons/architecture-patterns.md)**
+
+```
+✅ CORRECT: features/dashboard/ (complete feature)
+❌ WRONG: components/dashboard/ (shared components)
+```
+
+### **File Naming Compliance**
+
+**Lesson**: kebab-case is MANDATORY for ALL files
+**Details**: See **[development-environment.md](../lessons/development-environment.md)**
+
+```
+✅ CORRECT: stats-card.tsx, upcoming-appointments.tsx
+❌ WRONG: StatsCard.tsx, UpcomingAppointments.tsx
+```
+
+### **Object-Based Constants**
+
+**Lesson**: Never use string literals in switch statements
+**Details**: See **[implementation-checklist.md](../lessons/implementation-checklist.md)**
+
+```typescript
+✅ CORRECT: case APPOINTMENT_STATUS.scheduled:
+❌ WRONG: case 'scheduled':
+```
+
+## 📋 Implementation Process (MANDATORY)
+
+Before writing ANY code, follow this exact sequence:
+
+1. **LESSONS FIRST** - Read **[implementation-checklist.md](../lessons/implementation-checklist.md)** completely
+2. **PATTERNS SECOND** - Study existing codebase patterns (sidebar.tsx example)
+3. **COMPLIANCE THIRD** - Verify against **[my-mistakes.md](../rules/my-mistakes.md)**
+4. **IMPLEMENT FOURTH** - Write code following established patterns
+5. **VERIFY FIFTH** - Test, format, and validate
+
+## 🎯 Memory Triggers
+
+### **Red Flags** → STOP and check lessons
+
+- String literals in switch statements → **[implementation-checklist.md](../lessons/implementation-checklist.md)**
+- PascalCase file names → **[development-environment.md](../lessons/development-environment.md)**
+- Technical layer organization → **[architecture-patterns.md](../lessons/architecture-patterns.md)**
+- React hooks in utilities → **[implementation-checklist.md](../lessons/implementation-checklist.md)**
+
+### **Green Flags** → Continue with confidence
+
+- Object-based constants (USER_ROLES.admin)
+- Feature-based organization (features/dashboard/)
+- Dependency injection patterns
+- kebab-case file naming
+
+## 🔧 Quick Recovery Commands
 
 ```bash
 # Reset to clean state
@@ -92,146 +140,28 @@ bun run format
 
 # Run tests
 bun run test
-
-# Check git status
-git status --porcelain
 ```
 
-### Verification Checklist
+## 📚 When to Study
 
-- [ ] Dependencies installed: `bun install`
-- [ ] Formatting working: `bun run format`
-- [ ] Tests passing: `bun run test`
-- [ ] Git status clean: `git status`
-- [ ] Configuration valid: Check JSON syntax
-- [ ] Architecture patterns: Follow feature-based structure with plugin design
+### **Before Starting Work**
 
-## When to Study This Hub
+- **MANDATORY**: **[implementation-checklist.md](../lessons/implementation-checklist.md)**
+- **MANDATORY**: **[development-environment.md](../lessons/development-environment.md)**
+- **MANDATORY**: **[my-mistakes.md](../rules/my-mistakes.md)**
 
-### Before Starting Work
+### **During Implementation**
 
-- **MANDATORY**: Check topic-specific lessons for setup guidance
-- **MANDATORY**: Review implementation checklist
-- **MANDATORY**: Verify environment configuration
-- **MANDATORY**: Review best practices checklists
-- **MANDATORY**: Read my-mistakes.md to avoid repeating errors
+- Pattern verification: **[implementation-checklist.md](../lessons/implementation-checklist.md)**
+- Architecture guidance: **[architecture-patterns.md](../lessons/architecture-patterns.md)**
+- File naming: **[development-environment.md](../lessons/development-environment.md)**
 
-### When Encountering Problems
+### **When Encountering Problems**
 
-- Search relevant topic-specific lesson
-- Try recovery commands
-- Document new solutions
-- Check if mistake is already in my-mistakes.md
+- Search relevant lesson in **@[.windsurf/lessons]**
+- Try recovery commands above
+- Check **[my-mistakes.md](../rules/my-mistakes.md)**
 
-### During Onboarding
+---
 
-- Read all topic-specific lessons
-- Set up environment according to templates
-- Understand workflow processes
-- Memorize implementation checklist
-
-### Regular Maintenance
-
-- Review lessons monthly for updates
-- Add new solutions as discovered
-- Share with team members
-- Update my-mistakes.md when I repeat errors
-
-## Adding New Lessons
-
-When encountering new problems or solutions:
-
-1. **Identify the Topic** - Choose existing category or create new one
-2. **Document the Problem** - What went wrong and why
-3. **Provide Solutions** - Step-by-step resolution process
-4. **Include Prevention** - How to avoid in the future
-5. **Add Recovery Commands** - Quick fix commands
-6. **Update This Hub** - Reference new lesson if needed
-7. **Verify Correct Location** - Always create lessons in `.windsurf/lessons/` NOT `.windsurf/rules/lessons/`
-
-### Lesson Template
-
-````markdown
-# Topic Name
-
-## Problem Description
-
-- What happened
-- Why it occurred
-- Impact on workflow
-
-## Solution Steps
-
-1. Step 1 with command/example
-2. Step 2 with verification
-3. Step 3 with validation
-
-## Prevention Strategies
-
-- How to avoid recurrence
-- Best practices to implement
-- Monitoring/checks to add
-
-## Recovery Commands
-
-```bash
-# Quick fix commands
-command1
-command2
-```
-````
-
-## Continuous Improvement
-
-### Review Schedule
-
-- **Daily**: Quick scan of recent issues
-- **Weekly**: Update lessons with new findings
-- **Monthly**: Comprehensive review and reorganization
-
-### Knowledge Sharing
-
-- Update lessons immediately after learning
-- Include specific examples and commands
-- Share with team members during onboarding
-- Reference lessons in code reviews when relevant
-
-### Tool Evaluation
-
-- Regularly assess current tool effectiveness
-- Test new tools in isolated environments
-- Document migration strategies
-- Keep backup options available
-
-## Memory Triggers
-
-### Red Flags
-
-- Repeated similar errors
-- Tool configuration conflicts
-- Workflow confusion
-- Inconsistent code formatting
-- Missing test coverage
-- Environment setup failures
-- Tightly coupled external dependencies
-- String-based type definitions
-- Mixed routing and business logic concerns
-
-### Prevention Opportunities
-
-- Standardize setup processes
-- Create templates for common tasks
-- Document decision rationales
-- Implement automated checks
-- Regular knowledge sharing sessions
-- Design interfaces before implementing providers
-- Use feature-based organization consistently
-- Prefer object-based constants over string literals
-
-### When to Study
-
-- Before starting new projects
-- When onboarding team members
-- During code reviews
-- When troubleshooting issues
-- Before implementing major changes
+**REMEMBER: This file is the ENTRY POINT. All detailed educational content lives in the lessons directory. Follow the rules → check lessons → implement correctly.**

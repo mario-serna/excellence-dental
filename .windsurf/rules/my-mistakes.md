@@ -19,11 +19,112 @@ description: This file serves as a reference for common mistakes and prevention 
 **Lesson Reference:** All lessons are there to prevent these exact mistakes
 **Prevention:** Mandatory lesson review before any code writing
 
-### 3. Ignoring Established Patterns
+### 4. Dashboard Architecture Misclassification
 
-**Problem:** Creating new patterns instead of following existing ones
-**Lesson Reference:** Study existing codebase patterns first
-**Prevention:** Always find 2-3 examples of similar code before implementing
+**Problem:** Treating dashboard as shared components instead of a feature
+**Lesson Reference:** Phase 4 planning - Dashboard is a complete business feature
+**Prevention:** Always organize by business capability, not technical layers
+
+### 5. File Naming Convention Violations
+
+**Problem:** Using PascalCase for component files instead of kebab-case
+**Lesson Reference:** `development-environment.md` - "Enforce kebab-case for ALL files"
+**Prevention:** Always use kebab-case: `stats-card.tsx` not `StatsCard.tsx`
+
+### 6. String Literal Pattern Misses
+
+**Problem**: Not immediately catching string literal violations in switch statements
+**Lesson Reference**: `implementation-checklist.md` - "Switch statements → Must use object-based constants"
+**Prevention**: Systematically review all switch cases for string literals
+
+### 7. Component Reusability Violations
+
+**Problem**: Creating components that require translation props, violating reusability principles
+**Lesson Reference**: `component-reusability.md` - "Component should manage its own i18n"
+**Prevention**: Make components self-contained with their own translation hooks
+
+### 8. Translation Props Pattern Misses
+
+**Problem**: Not immediately catching translation props that make components non-reusable
+**Lesson Reference**: `component-reusability.md` - "Avoid translation props that violate reusability"
+**Prevention**: Systematically review component interfaces for translation props
+
+### 9. Next.js Layout Nesting Violations (NEW)
+
+**Problem**: Adding `<html>` and `<body>` tags to nested layouts
+**Lesson Reference**: Next.js layout nesting documentation - "Only root layout should contain html/body"
+**Prevention**: Never add html/body tags to any layout except `app/layout.tsx`
+
+### 10. Translation Loading Without Locale (NEW)
+
+**Problem**: Calling `getMessages()` without locale parameter
+**Lesson Reference**: next-intl documentation - "getMessages() requires locale parameter"
+**Prevention**: Always pass locale: `getMessages({ locale: params.locale })`
+
+### 11. Middleware Configuration Issues (NEW)
+
+**Problem**: Creating separate `middleware.ts` instead of using `proxy.ts`
+**Lesson Reference**: Project structure - Use proxy.ts for middleware exports
+**Prevention**: Use proxy.ts pattern with proper matcher configuration
+
+### 12. Server-Side vs Client-Side Rendering (NEW)
+
+**Problem**: Using client-side components for static dashboard content
+**Lesson Reference**: Performance optimization - Server-rendered content is better for static content
+**Solution**: Use server-side rendering with `getTranslations({ locale })` for dashboard components
+
+### 13. Dashboard Internationalization (NEW)
+
+**Problem**: Not implementing proper internationalization for dashboard components
+**Lesson Reference**: Dashboard internationalization documentation - "Use server-side rendering for static content"
+**Prevention**: Implement server-side rendering with `getTranslations({ locale })` for dashboard components
+
+### 14. Implementation Preview & Clarification Violations (NEW)
+
+**Problem**: Not showing implementation preview and asking clarifying questions before writing code
+**Lesson Reference**: `implementation-protocol.md` - "Step 0: IMPLEMENTATION PREVIEW & CLARIFICATION (MANDATORY)"
+**Prevention**: Always show detailed preview of implementation plan and ask clarifying questions with examples before any code generation
+
+### 15. Skipping User Approval (NEW)
+
+**Problem**: Proceeding with implementation without waiting for explicit user approval
+**Lesson Reference**: `implementation-protocol.md` - "WAIT for user approval before proceeding to implementation"
+**Prevention**: Never proceed with implementation until user explicitly approves the plan
+
+## Dashboard Internationalization Implementation (NEW LESSON)
+
+### Architecture Pattern Used
+
+- **Server-Side Rendering**: Dashboard components use `getTranslations({ locale })` from `next-intl/server`
+- **Client-Side Separation**: Login form uses client-side `useTranslations()` for interactive elements
+- **Proper Data Flow**: Server page extracts locale from URL params and passes to components
+
+### Component Design Principles Applied
+
+- **Self-Contained Components**: Each dashboard component manages its own translations
+- **No Translation Props**: Components accept `locale` parameter instead of translation strings
+- **Type Safety**: Proper TypeScript interfaces with locale parameters
+
+### Performance Benefits
+
+- **Server Rendering**: Content is server-rendered with correct translations
+- **SEO Optimization**: HTML includes proper lang attributes
+- **Reduced Client Bundle**: No translation duplication in client-side code
+
+### Translation Flow
+
+```
+Server Page → getTranslations({ locale }) → Dashboard Component → Translated Content
+```
+
+## Best Practices Reinforced
+
+1. **Server-side rendering for static content** with i18n
+2. **Component self-containment** for translation management
+3. **Proper TypeScript interfaces** with locale parameters
+4. **Clean separation of concerns** between server and client logic
+
+This implementation demonstrates proper Next.js 13+ internationalization patterns and component architecture principles.
 
 ## 🔧 Prevention Commands
 
@@ -49,6 +150,9 @@ bun run type-check
 - [ ] Applied dependency injection
 - [ ] No string literals
 - [ ] No React hooks in utilities
+- [ ] Using kebab-case file naming
+- [ ] Dashboard classified as feature
+- [ ] All switch cases use constants
 
 ## 📚 Pattern Reference (Copy-Paste Ready)
 
@@ -101,6 +205,12 @@ When I see these → STOP and check lessons:
 - `useTranslations()` in utility → Must use dependency injection
 - Creating new files → Must follow feature-based structure
 - Provider instantiation → Must use factory pattern
+- `emptyStateTitle?: string` → Component not truly reusable
+- Translation props in interface → Violates reusability principles
+- **NEW**: `<html>` or `<body>` in nested layout → Violates Next.js rules
+- **NEW**: `getMessages()` without locale → Loads wrong translations
+- **NEW**: Creating middleware.ts → Use proxy.ts instead
+- **NEW**: About to implement code → Must show preview and ask clarifying questions
 
 ## ⚡ Quick Recovery Commands
 
@@ -117,4 +227,4 @@ grep -r "AuthProviderFactory" features/auth/
 
 ---
 
-**RULE: Read lessons first, implement second. Never the other way around.**
+**RULE: Implementation preview & clarification first, lessons second, implement third. Never the other way around.**
