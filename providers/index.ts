@@ -7,5 +7,8 @@ export * from './provider';
 // Auth domain
 export * from './domain/auth';
 
+// Dashboard domain
+export * from './domain/dashboard';
+
 // Registry and client providers
 export * from './registry';

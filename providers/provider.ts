@@ -19,6 +19,7 @@ export const PROVIDER_DOMAINS = {
   AUTH: 'auth',
   DATABASE: 'database',
   STORAGE: 'storage',
+  DASHBOARD: 'dashboard',
 } as const;
 
 export type ProviderDomain =
